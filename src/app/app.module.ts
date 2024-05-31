@@ -16,7 +16,7 @@ import { FaqComponent } from './faq/faq.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +30,7 @@ import { FaqComponent } from './faq/faq.component';
     AgChartsAngularModule,
     FaqComponent
   ],
-  providers: [ToastrModule],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

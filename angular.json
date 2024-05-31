@@ -23,16 +23,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/toastr/build/toastr.min.css",
-              "node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css"
+              "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.js",
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -71,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "netatlas:build:production"
+              "browserTarget": "netatlas:build:production"
             },
             "development": {
-              "buildTarget": "netatlas:build:development"
+              "browserTarget": "netatlas:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "netatlas:build"
+            "browserTarget": "netatlas:build"
           }
         },
         "test": {
@@ -97,8 +90,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/toastr/build/toastr.min.css"
+              "src/styles.css"
             ],
             "scripts": []
           }
