@@ -1,0 +1,63 @@
+<div class="topbar stick">
+    <div class="logo">
+        <a title="" href="newsfeed.html"><img src="assets/images/logo.png" alt=""></a>
+    </div>
+
+    <div class="top-area">
+
+        <div class="top-search">
+            <form method="post" class="">
+                <input type="text" placeholder="Rechercher un atlasien">
+                <button data-ripple><i class="ti-search"></i></button>
+            </form>
+        </div>
+
+        <ul class="setting-area">
+            <!-- <?php if($_SESSION['userdata']['banned_temporarly'] == 0) {?> -->
+            <div class="user-info-container">
+                <span class="user-name">
+                    <!-- <?php echo $_SESSION['userdata']['firstname']; echo " "; echo $_SESSION['userdata']['lastname'];?> -->
+                </span>
+            </div>
+
+            <!-- <?php }?> -->
+            <li><a href="./" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
+            <li>
+                <a href="#" title="Notification" data-ripple="">
+                    <i class="ti-bell"></i><span>0</span>
+                </a>
+                <div class="dropdowns">
+                    <span> 0 Nouveau Notifications</span>
+                    <ul class="drops-menu">
+
+                    </ul>
+                    <a href="notifications.html" title="" class="more-mesg">voir plus</a>
+                </div>
+            </li>
+            <li>
+                <a href="#" title="Messages" data-ripple=""><i class="ti-comment"></i><span>0</span></a>
+                <div class="dropdowns">
+                    <span>0 Nouveau Messages</span>
+                    <ul class="drops-menu">
+
+                    </ul>
+                    <a href="messages.html" title="" class="more-mesg">voir plus</a>
+                </div>
+            </li>
+
+        </ul>
+        <div class="user-img">
+            <img src="<?php echo validate_image($_settings->userdata('avatar')) ?>" alt="User Image" height="80"
+                width="45">
+            <!-- <img src="<?php echo validate_image($_settings->userdata('avatar')) ?>" alt=""> -->
+            <span class="status f-online"></span>
+            <div class="user-setting">
+                <a href="#" title=""><i class="ti-user"></i> Voir profil</a>
+                <a href="#" title=""><i class="ti-pencil-alt"></i>Edition profil</a>
+                <a href="#" title=""><i class="ti-settings"></i>paramètres</a>
+                <a href="<?php echo BASE_URL.'/classes/Login.php?f=user_logout' ?>" title=""><i
+                        class="ti-power-off"></i>déconnexion</a>
+            </div>
+        </div>
+    </div>
+</div><!-- topbar -->

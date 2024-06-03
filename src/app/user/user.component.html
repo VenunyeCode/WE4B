@@ -1,0 +1,22 @@
+<app-top-bar></app-top-bar>
+<section>
+    <div class="gap gray-bg">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row" id="page-contents">
+                        <div class="col-lg-3">
+                            <aside class="sidebar static">
+                                <!-- MENU Include -->
+                                <app-left-side-bar></app-left-side-bar>
+
+                            </aside>
+                        </div><!-- sidebar -->
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<app-footer></app-footer>

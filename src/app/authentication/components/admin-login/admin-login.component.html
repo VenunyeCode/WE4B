@@ -1,0 +1,133 @@
+<div class="theme-layout">
+    <div class="container-fluid pdng0">
+        <div class="row merged">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="land-featurearea">
+                    <div class="land-meta">
+                        <h1>
+                            NetAtlas
+                        </h1>
+                        <p>
+                            Bienvenue sur le Réseau Social Universitaire NetAtlas
+                        </p>
+                        <div class="friend-logo">
+                            <span><img src="assets/images/wink.png" alt=""></span>
+                        </div>
+                        <a href="#" title="" class="folow-me"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="login-reg-bg">
+                    <div class="log-reg-area sign">
+                        <h2 class="log-title">Authentification administrateur</h2>
+                        <p>
+                            NetAtlas
+                        </p>
+                        <form method="post" autocomplete="off" id="loginform">
+                            <div class="form-group">
+                                <input type="text" id="username" required="required" name="username" />
+                                <label class="control-label" for="username">Nom d'utilisateur ou email</label><i
+                                    class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" required="required" id="password" name="password" />
+                                <label class="control-label" for="password">Mot de passe</label><i
+                                    class="mtrl-select"></i>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked="checked" /><i class="check-box"></i>Se souvenir
+                                    de moi.
+                                </label>
+                            </div>
+                            <div class="submit-btns">
+                                <button class="mtr-btn signin" type="submit"><span>Se connecter
+                                    </span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .customize {
+        padding: 10px 30px;
+        font-size: 14px;
+        font-family: 'Arial';
+    }
+</style>
+<script type="text/javascript" src="../plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<!-- <script src="<?php echo BASE_URL ?>js/mdb.umd.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="http://malsup.github.io/jquery.blockUI.js"></script>
+<!-- jQuery -->
+<!-- <script src="<?php echo BASE_URL ?>plugins/jquery/jquery.min.js"></script> -->
+
+<script>
+    $(function () {
+        var form = $('#loginform'),
+            btn = $('#submit');
+        form.on("submit", function (e) {
+            e.preventDefault()
+            $.ajax({
+                url: _base_url_ + 'classes/Login.php?f=login',
+                method: 'POST',
+                data: $(this).serialize(),
+                beforeSend: function () {
+                    btn.attr('disabled', 'disabled');
+                    $.blockUI({
+                        message: '<div class="spinner-border text-primary" role="status"></div>',
+                        css: {
+                            backgroundColor: 'transparent',
+                            border: '0'
+                        },
+                        overlayCSS: {
+                            backgroundColor: '#fff',
+                            opacity: 0.8
+                        }
+                    });
+                },
+                error: function (resp) {
+                    $.unblockUI(); // Unblock UI after AJAX request completes
+                    //toastr.error('Erreur: ' + response.message);
+                    console.log(resp.messageg)
+                },
+                success: function (resp) {
+                    $.unblockUI(); // Unblock UI after AJAX request completes
+
+                    if (resp) {
+                        resp = JSON.parse(resp)
+                        console.log(resp)
+                        if (resp.status == 'success') {
+                            toastr.success('👋 ' + resp.message, '', {
+                                showMethod: 'slideDown',
+                                hideMethod: 'slideUp',
+                                closeButton: true,
+                                tapToDismiss: false,
+                                progressBar: true,
+                                timeOut: 10000,
+                                rtl: $('html').attr('data-textdirection') === 'rtl',
+                                onHidden: function () {
+                                }
+
+                            });
+                            setTimeout(() => {
+                                //location.href = 'home.php';
+                                location.replace(_base_url_ + 'admin/home.php');
+                            }, 3000);
+
+                        } else if (resp.status == 'failed') {
+                            toastr.error('Erreur: ' + resp.message);
+                            $('[name="username"]').focus()
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>
