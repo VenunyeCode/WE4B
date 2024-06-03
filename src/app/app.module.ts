@@ -16,7 +16,7 @@ import { FaqComponent } from './faq/faq.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
