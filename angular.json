@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "netatlas:build:production"
+              "buildTarget": "netatlas:build:production"
             },
             "development": {
-              "browserTarget": "netatlas:build:development"
+              "buildTarget": "netatlas:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "netatlas:build"
+            "buildTarget": "netatlas:build"
           }
         },
         "test": {
