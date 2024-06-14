@@ -25,7 +25,7 @@
                         <p>
                             NetAtlas
                         </p>
-                        <form method="post" autocomplete="off" id="loginform" action="./process_login.php">
+                        <form autocomplete="off" id="loginform" ngForm>
                             <div class="form-group">
                                 <input type="text" id="username" required="required" name="username" />
                                 <label class="control-label" for="username">Nom d'utilisateur ou email</label><i
@@ -42,7 +42,7 @@
                                     de moi.
                                 </label>
                             </div>
-                            <a href="<?php echo BASE_URL  ?>user/edit-password.php" title="" class="forgot-pwd">Mot de
+                            <a href="" title="" class="forgot-pwd">Mot de
                                 passe oublié ?</a>
                             <div class="submit-btns">
                                 <button class="mtr-btn signin" style="margin-right: 5px;" type="submit"><span>Se
