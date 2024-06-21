@@ -30,7 +30,7 @@ import { FaqComponent } from './faq/faq.component';
     AgChartsAngularModule,
     FaqComponent
   ],
-  providers: [],
+  providers: [ToastrModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
