@@ -1,0 +1,15 @@
+<!-- Nouveau commentaire -->
+<li class="post-comment">
+    <div class="comet-avatar">
+        <img [src]="avatarUrl" alt="" height="45" width="45">
+    </div>
+
+    <div class="post-comt-box">
+        <form action="" [formGroup]="commentForm" (submit)="onSubmit()">
+            <textarea class="comment-field" data-id='' placeholder="Ecrire un commentaire" formControlName="comment"></textarea>
+
+            <button type="submit" title="Commenter" class="submit-comment"><i class="fa fa-paper-plane"
+                    style="color:blue;"></i></button>
+        </form>
+    </div>
+</li>

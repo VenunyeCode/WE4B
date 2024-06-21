@@ -1,4 +1,4 @@
-<app-top-bar></app-top-bar>
+<app-top-bar [unreadNotif]="unreadNotif"></app-top-bar>
 <section>
     <div class="gap gray-bg">
         <div class="container-fluid">
@@ -7,12 +7,20 @@
                     <div class="row" id="page-contents">
                         <div class="col-lg-3">
                             <aside class="sidebar static">
-                                <!-- MENU Include -->
+
                                 <app-left-side-bar></app-left-side-bar>
 
                             </aside>
-                        </div><!-- sidebar -->
-                        <router-outlet></router-outlet>
+                        </div>
+                        <div class="col-lg-6">
+                            <router-outlet></router-outlet>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <aside class="sidebar static">
+                                <app-right-side-bar [unreadNotif]="unreadNotif"></app-right-side-bar>
+                            </aside>
+                        </div>
                     </div>
                 </div>
             </div>

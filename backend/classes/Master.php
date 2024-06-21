@@ -1,4 +1,9 @@
 <?php
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
 require_once ('../config.php');
 require_once ('./../utils/AppUtils.php');
 include ('./ImgFileUploader.php');
@@ -45,14 +50,21 @@ class Master extends DBConnection
 
 	function save_post2()
 	{
-		extract($_POST);
-		//if (empty($_POST['id'])) {
-		//	$_POST['owner'] = $this->settings->userdata('id_user');
-		//}
+		$input = json_decode(file_get_contents('php://input'), true);
+
+		$content = $_POST['content'] ?? null;
+		$id_user = $_POST['id_user'] ?? null;
+
+		if (!$content || !$id_user) {
+			$resp["status"] = "failed";
+			$resp["message"] = "Missing content or user ID.";
+			return json_encode($resp);
+		}
+
 
 		//Requête de création d'un nouveau post/message
 		$query = "INSERT INTO `post` (content_post, id_user) VALUES            
-		('" . AppUtils::securizeStringForSQL($content) . "', '" . $this->settings->userdata('id_user') . "')";
+		('" . AppUtils::securizeStringForSQL($_POST['content']) . "', '" . $_POST['id_user'] . "')";
 		//Créer des notifications pour tous les followers de l'auteur du post
 		$notifStatement = $this->conn->prepare("INSERT INTO notification (id_user, content_notification, id_post)
 		SELECT f.id_user_follower, CONCAT('@',u.username,' a crée un nouveau post'), ?
@@ -69,7 +81,7 @@ class Master extends DBConnection
 			$notifStatement->bind_param('ss', $aid, $aid);
 			$notifStatement->execute();
 
-			$resp['aid'] = $aid;
+			//$resp['aid'] = $aid;
 			$resp["status"] = "success";
 			$resp["message"] = "Nouveau post effectué avec succès.";
 			//Insérer l'image, si c'est un post avec media
@@ -78,7 +90,7 @@ class Master extends DBConnection
 
 				$img = new ImgFileUploader($this->conn);
 
-				$img->SaveFileAsNew($this->conn->insert_id);
+				$img->SaveFileAsNew($aid);
 			} else {
 				$resp["error"] = "Pas de fichier chargé";
 			}
@@ -122,37 +134,40 @@ class Master extends DBConnection
 			$resp['status'] = 'failed';
 			$resp['msg'] = $this->conn->error;
 		}
-		
+
 		return json_encode($resp);
 	}
 	function update_like()
 	{
-		extract($_POST);
-		if ($status == 1) {
-			$sql = "INSERT INTO `post_like` set id_post = '{$post_id}', id_user = '{$this->settings->userdata('id_user')}'";
+		$input = json_decode(file_get_contents('php://input'), true);
+		if ($input['status'] == 1) {
+			$sql = "INSERT INTO `post_like` set id_post = '{$input['id_post']}', id_user = '{$input['id_user']}'";
 		} else {
-			$sql = "DELETE FROM `post_like` where id_post = '{$post_id}' and id_user = '{$this->settings->userdata('id_user')}'";
+			$sql = "DELETE FROM `post_like` where id_post = '{$input['id_post']}' and id_user = '{$input['id_user']}'";
 		}
 		$process = $this->conn->query($sql);
 		if ($process) {
 			$resp['status'] = 'success';
-			$newLikes = $this->conn->query("SELECT id_user FROM `post_like` where id_post = '{$post_id}' ")->num_rows;
-			$this->conn->query("UPDATE post SET `likes` = $newLikes where id_post = '{$post_id}' ");
+			$resp['message'] = 'Post liked successfully';
+			$newLikes = $this->conn->query("SELECT id_user FROM `post_like` where id_post = '{$input['id_post']}' ")->num_rows;
+			$this->conn->query("UPDATE post SET `likes` = $newLikes where id_post = '{$input['id_post']}' ");
 			$resp['likes'] = $newLikes;
 		} else {
 			$resp['status'] = 'failed';
-			$resp['error'] = $this->conn->error;
+			$resp['message'] = $this->conn->error;
 		}
 		return json_encode($resp);
 	}
 	function save_comment()
 	{
-		extract($_POST);
-		$sql = "INSERT INTO `post` set id_post_comment = '{$post_id}', id_user = '{$this->settings->userdata('id_user')}', `content_post` = '{$comment}'";
+		$input = json_decode(file_get_contents('php://input'), true);
+
+		$sql = "INSERT INTO `post` set id_post_comment = '{$input['id_post']}', id_user = '{$input['id_user']}', `content_post` = '{$input['comment']}'";
 		$process = $this->conn->query($sql);
 		if ($process) {
 			$resp['status'] = 'success';
-			$commentQuery = "SELECT COUNT(id_post) as comments FROM post where removed = 0 and id_post_comment = '{$post_id}'";
+			$resp['message'] = 'Comment saved successfully';
+			$commentQuery = "SELECT COUNT(id_post) as comments FROM post where removed = 0 and id_post_comment = '{$input['id_post']}'";
 			$commentResult = $this->conn->query($commentQuery);
 			if ($commentResult->num_rows != 0) {
 				$comments = $commentResult->fetch_assoc();
@@ -162,7 +177,7 @@ class Master extends DBConnection
 			}
 		} else {
 			$resp['status'] = 'failed';
-			$resp['error'] = $this->conn->error;
+			$resp['message'] = $this->conn->error;
 		}
 		return json_encode($resp);
 	}
@@ -178,6 +193,112 @@ class Master extends DBConnection
 		}
 		return json_encode($resp);
 
+	}
+
+	function get_lastest_post()
+	{
+		$sql = "SELECT p.*, concat(u.firstname, ' ',u.lastname) as `author_name` , u.avatar as `author_avatar`, u.username as `author_username` FROM `post` p INNER JOIN `user` u ON p.id_user = u.id_user WHERE p.id_post_comment IS NULL AND p.removed = 0 ORDER BY p.`post_date` DESC";
+		$process = $this->conn->query($sql);
+		$data = [];
+		if ($process) {
+			$resp['status'] = 'success';
+			$resp['message'] = 'Posts successfully retrieved';
+			if ($process->num_rows > 0) {
+				while ($row = $process->fetch_assoc()) {
+					$data[] = $row;
+				}
+			}
+			$resp['data'] = $data;
+		} else {
+			$resp['status'] = 'failed';
+			$resp['message'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+
+	function get_comments_by_post($id_post)
+	{
+		$sql = "SELECT p.*, concat(u.firstname, ' ',u.lastname) as `author_name` , u.avatar as `author_avatar`, u.username as `author_username` FROM `post` p inner join `user` u on p.id_user = u.id_user WHERE p.removed = 0 and p.`id_post_comment` = {$id_post} ORDER BY p.`post_date` DESC";
+		$process = $this->conn->query($sql);
+		$data = [];
+		if ($process) {
+			$resp['status'] = 'success';
+			$resp['message'] = 'Comment of post successfully retrieved';
+			if ($process->num_rows > 0) {
+				while ($row = $process->fetch_assoc()) {
+					$data[] = $row;
+				}
+			}
+			$resp['data'] = $data;
+		} else {
+			$resp['status'] = 'failed';
+			$resp['message'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+
+	function check_liked_post()
+	{
+		$input = json_decode(file_get_contents('php://input'), true);
+		$likeQuery = $this->conn->query("SELECT id_post_like FROM `post_like` where id_post = '{$input['id_post']}' and id_user = '{$input['id_user']}'")->num_rows > 0;
+		$resp['status'] = 'success';
+		if (isset($likeQuery) && !!$likeQuery) {
+			$resp['message'] = 'User has liked this post';
+			$resp['liked'] = true;
+		} else {
+			$resp['message'] = 'User didn\'t like this post';
+			$resp['liked'] = false;
+		}
+
+		return json_encode($resp);
+	}
+
+	function get_insight($id_user)
+	{
+		try {
+			$dataLike = [];
+			$dataView = [];
+			$unreadNotif = $this->conn->query("SELECT id_notification FROM `notification` WHERE is_notification_read = 0 AND removed = 0 AND id_user = {$id_user} ")->num_rows;
+			$allLikes = $this->conn->query("SELECT pl.id_post_like FROM `post_like` pl JOIN post p ON pl.id_post = p.id_post JOIN user u ON p.id_user = u.id_user WHERE p.id_user = {$id_user}")->num_rows;
+			$allViews = $this->conn->query("SELECT pv.id_post_view FROM `post_view` pv JOIN post p ON pv.id_post = p.id_post JOIN user u ON p.id_user = u.id_user WHERE p.id_user = {$id_user}")->num_rows;
+			$queryWeekView = "SELECT pv.id_post_view, us.avatar as `author_avatar`, us.id_user, concat(us.firstname,' ',us.lastname) as `author_name` FROM `post_view` pv JOIN post p ON pv.id_post = p.id_post JOIN user u ON p.id_user = u.id_user JOIN user us ON pv.id_user = us.id_user WHERE YEARWEEK(pv.view_date, 1) = YEARWEEK(CURDATE(), 1) AND p.id_user = {$id_user}";
+			$queryWeekLike = "SELECT pl.id_post_like, us.avatar as `author_avatar`, us.id_user, concat(us.firstname,' ',us.lastname) as `author_name` FROM `post_like` pl JOIN post p ON pl.id_post = p.id_post JOIN user u ON p.id_user = u.id_user JOIN user us ON pl.id_user = us.id_user WHERE YEARWEEK(pl.like_date, 1) = YEARWEEK(CURDATE(), 1) AND p.id_user = {$id_user}";
+
+			$weekViewResult = $this->conn->query($queryWeekView);
+			$weekLikeResult = $this->conn->query($queryWeekLike);
+
+			//if($weekViewResult->num_rows>0){
+			$weekViews = $weekViewResult->num_rows > 0 ? $weekViewResult->num_rows : 0;
+			//}
+			//if($weekLikeResult->num_rows>0){
+			$weekLikes = $weekLikeResult->num_rows > 0 ? $weekLikeResult->num_rows : 0;
+
+			if ($weekLikes > 0) {
+				while ($weekLike = $weekLikeResult->fetch_assoc()) {
+					$dataLike[] = $weekLike;
+				}
+			}
+			if ($weekViews > 0) {
+				while ($weekView = $weekViewResult->fetch_assoc()) {
+					$dataView[] = $weekView;
+				}
+			}
+
+			$resp['status'] = 'success';
+			$resp['message'] = 'Successful';
+			$resp['unread_notif'] = $unreadNotif;
+			$resp['likes'] = $allLikes;
+			$resp['views'] = $allViews;
+			$resp['week_views'] = $weekViews;
+			$resp['week_likes'] = $weekLikes;
+			$resp['data_like'] = $dataLike;
+			$resp['data_view'] = $dataView;
+		} catch (\Throwable $th) {
+			$resp['status'] = 'failed';
+			$resp['message'] = 'Failed';
+		}
+
+		return json_encode($resp);
 	}
 }
 
@@ -202,6 +323,26 @@ switch ($action) {
 		break;
 	case 'delete_comment':
 		echo $Master->delete_comment();
+		break;
+	case 'lastest_post':
+		echo $Master->get_lastest_post();
+		break;
+	case 'post_comments':
+		if (isset($_GET['id_post'])) {
+			echo $Master->get_comments_by_post($_GET['id_post']);
+		} else {
+			echo json_encode(['status' => 'failed', 'message' => 'ID post manquant.']);
+		}
+		break;
+	case 'check_like':
+		echo $Master->check_liked_post();
+		break;
+	case 'insight':
+		if (isset($_GET['id_user'])) {
+			echo $Master->get_insight($_GET['id_user']);
+		} else {
+			echo json_encode(['status' => 'failed', 'message' => 'ID user manquant.']);
+		}
 		break;
 	default:
 		// echo $sysset->index();

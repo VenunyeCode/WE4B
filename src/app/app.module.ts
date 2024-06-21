@@ -4,6 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserModule } from './user/user.module';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { RightSideBarComponent } from './layouts/right-side-bar/right-side-bar.component';
 
 @NgModule({
   declarations: [
@@ -11,10 +18,15 @@ import { UserModule } from './user/user.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    AuthenticationModule,
     UserModule
+    
   ],
-  providers: [],
+  providers: [ToastrModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

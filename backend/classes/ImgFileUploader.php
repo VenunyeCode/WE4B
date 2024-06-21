@@ -4,6 +4,7 @@ class ImgFileUploader extends DBConnection
 {
 
     private $savePath = "uploads/";
+    //private $savePath = BASE_APP . "uploads/";
     public $hasAdequateFile = false;
     public $errorText = "";
 

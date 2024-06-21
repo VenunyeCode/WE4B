@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule)
   },
   {
-    path: 'home',
+    path: 'user',
     loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   }
 ];

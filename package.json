@@ -18,8 +18,13 @@
     "@angular/platform-browser": "^18.0.3",
     "@angular/platform-browser-dynamic": "^18.0.3",
     "@angular/router": "^18.0.3",
+    "is-url": "^1.2.4",
+    "is-url-http": "^2.3.8",
+    "ngx-toastr": "^19.0.0",
     "rxjs": "~7.5.0",
+    "toastr": "^2.1.4",
     "tslib": "^2.3.0",
+    "validator": "^13.12.0",
     "zone.js": "~0.14.7"
   },
   "devDependencies": {
@@ -27,6 +32,7 @@
     "@angular/cli": "~18.0.4",
     "@angular/compiler-cli": "^18.0.3",
     "@types/jasmine": "~4.0.0",
+    "@types/validator": "^13.12.0",
     "jasmine-core": "~4.3.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",

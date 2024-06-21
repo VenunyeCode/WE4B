@@ -123,7 +123,7 @@ class Login extends DBConnection
 					}
 				}
 			}
-			$resp['status'] = "sucsess";
+			$resp['status'] = "success";
 			$resp['message'] = "Connexion réussie";
 
 			$resp['data'] = [
@@ -135,7 +135,7 @@ class Login extends DBConnection
 				'avatar' => $this->settings->userdata('avatar'),
 				'banned_temporarly' => $this->settings->userdata('banned_temporarly'),
 				'interdiction_date' => $this->settings->userdata('interdiction_date'),
-				'role' => $this->settings->userdata('role')
+				'role' => $this->USER_ROLE
 			];
 
 			echo json_encode($resp);

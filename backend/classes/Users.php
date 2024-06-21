@@ -30,7 +30,8 @@ class Users extends DBConnection
 		$data = '';
 		foreach ($_POST as $k => $v) {
 			if (!in_array($k, array('id'))) {
-				if (!empty($data)) $data .= " , ";
+				if (!empty($data))
+					$data .= " , ";
 				$data .= " {$k} = '{$v}' ";
 			}
 		}
@@ -38,10 +39,11 @@ class Users extends DBConnection
 			$qry = $this->conn->query("INSERT INTO users set {$data}");
 			if ($qry) {
 				$id = $this->conn->insert_id;
-				
+
 				foreach ($_POST as $k => $v) {
 					if ($k != 'id') {
-						if (!empty($data)) $data .= " , ";
+						if (!empty($data))
+							$data .= " , ";
 						if ($this->settings->userdata('id') == $id)
 							$this->settings->set_userdata($k, $v);
 					}
@@ -83,7 +85,8 @@ class Users extends DBConnection
 			if ($qry) {
 				foreach ($_POST as $k => $v) {
 					if ($k != 'id') {
-						if (!empty($data)) $data .= " , ";
+						if (!empty($data))
+							$data .= " , ";
 						if ($this->settings->userdata('id') == $id)
 							$this->settings->set_userdata($k, $v);
 					}
@@ -145,17 +148,17 @@ class Users extends DBConnection
 	}
 
 	/* public function delete_user_forever()
-	{
-		extract($_POST);
-		$qry = $this->conn->query("UPDATE user set banned_forever = 1 where id_user = $id");
-		if ($qry) {
-			if (is_file(BASE_APP . "uploads/avatars/$id.png"))
-				unlink(BASE_APP . "uploads/avatars/$id.png");
-			return json_encode(array('status' => 'success', 'message' => 'Utilisateur supprimé avec succès'));
-		} else {
-			return json_encode(array('status' => 'success', 'message' => 'Une erreur est survenue.'));
-		}
-	} */
+			 {
+				 extract($_POST);
+				 $qry = $this->conn->query("UPDATE user set banned_forever = 1 where id_user = $id");
+				 if ($qry) {
+					 if (is_file(BASE_APP . "uploads/avatars/$id.png"))
+						 unlink(BASE_APP . "uploads/avatars/$id.png");
+					 return json_encode(array('status' => 'success', 'message' => 'Utilisateur supprimé avec succès'));
+				 } else {
+					 return json_encode(array('status' => 'success', 'message' => 'Une erreur est survenue.'));
+				 }
+			 } */
 	public function save_member()
 	{
 		if (!empty($_POST['password']))
@@ -265,7 +268,7 @@ class Users extends DBConnection
 
 		}
 	}
-	
+
 	public function registration()
 	{
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -312,36 +315,41 @@ class Users extends DBConnection
 			$uid = $user->getUserId();
 
 			/*if (!empty($_FILES['img']['tmp_name'])) {
-				if (!is_dir(BASE_APP . "uploads/member"))
-					mkdir(BASE_APP . "uploads/member");
-				$ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
-				$fname = "uploads/member/$uid.png";
-				$accept = array('image/jpeg', 'image/png');
-				if (!in_array($_FILES['img']['type'], $accept)) {
-					$resp['msg'] = "Image file type is invalid";
-				}
-				if ($_FILES['img']['type'] == 'image/jpeg')
-					$uploadfile = imagecreatefromjpeg($_FILES['img']['tmp_name']);
-				elseif ($_FILES['img']['type'] == 'image/png')
-					$uploadfile = imagecreatefrompng($_FILES['img']['tmp_name']);
-				if (!$uploadfile) {
-					$resp['msg'] = "Image is invalid";
-				}
-				$temp = imagescale($uploadfile, 200, 200);
-				if (is_file(BASE_APP . $fname))
-					unlink(BASE_APP . $fname);
-				$upload = imagepng($temp, BASE_APP . $fname);
-				if ($upload) {
-					$this->conn->query("UPDATE `user` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$uid}'");
-				}
-				imagedestroy($temp);
-			}*/
+										   if (!is_dir(BASE_APP . "uploads/member"))
+											   mkdir(BASE_APP . "uploads/member");
+										   $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+										   $fname = "uploads/member/$uid.png";
+										   $accept = array('image/jpeg', 'image/png');
+										   if (!in_array($_FILES['img']['type'], $accept)) {
+											   $resp['msg'] = "Image file type is invalid";
+										   }
+										   if ($_FILES['img']['type'] == 'image/jpeg')
+											   $uploadfile = imagecreatefromjpeg($_FILES['img']['tmp_name']);
+										   elseif ($_FILES['img']['type'] == 'image/png')
+											   $uploadfile = imagecreatefrompng($_FILES['img']['tmp_name']);
+										   if (!$uploadfile) {
+											   $resp['msg'] = "Image is invalid";
+										   }
+										   $temp = imagescale($uploadfile, 200, 200);
+										   if (is_file(BASE_APP . $fname))
+											   unlink(BASE_APP . $fname);
+										   $upload = imagepng($temp, BASE_APP . $fname);
+										   if ($upload) {
+											   $this->conn->query("UPDATE `user` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$uid}'");
+										   }
+										   imagedestroy($temp);
+									   }*/
 		} else {
 			$resp['status'] = 'failed';
 			$resp['message'] = 'Erreur d\'inscription.';
 		}
 
 		return json_encode($resp);
+	}
+
+	function getImage($filename)
+	{
+
 	}
 
 	function get_all()
@@ -403,7 +411,7 @@ class Users extends DBConnection
 			}
 
 		}
-		return $this->return_query($interdiction_query);		
+		return $this->return_query($interdiction_query);
 	}
 
 	public function make_post_sensitive()
@@ -487,10 +495,17 @@ class Users extends DBConnection
 		return json_encode($resp);
 	}
 
-	function update_unread_notif()
+	function update_unread_notif($id_user)
 	{
-		$unreadNotif = $this->conn->query("SELECT id_notification FROM `notification` WHERE is_notification_read = 0 AND removed = 0 AND id_user = {$this->settings->userdata('id_user')} ")->num_rows;
-		$resp['unread'] = $unreadNotif;
+		try {
+			$unreadNotif = $this->conn->query("SELECT id_notification FROM `notification` WHERE is_notification_read = 0 AND removed = 0 AND id_user = {$id_user} ")->num_rows;
+			$resp['status'] = 'success';
+			$resp['message'] = 'success';
+			$resp['unread_notif'] = $unreadNotif;
+		} catch (\Throwable $th) {
+			$resp['status'] = 'failed';
+			$resp['message'] = 'failed';
+		}
 
 		return json_encode($resp);
 	}
@@ -561,12 +576,45 @@ class Users extends DBConnection
 			$id_notification = $interdiction_query->insert_id;
 			$query = $this->conn->prepare("insert into notification(content_notification, id_user, id_interdiction) values 
 			('Vous avez reçu un avertissement pour comportement inapproprié', '{$id_user}', '{$id_notification}')");
-			$query->execute();	
+			$query->execute();
 			if (is_file(BASE_APP . "uploads/avatars/$id_user.png"))
 				unlink(BASE_APP . "uploads/avatars/$id_user.png");
 			return json_encode(array('status' => 'success', 'message' => 'Utilisateur supprimé avec succès'));
 		} else {
 			return json_encode(array('status' => 'success', 'message' => 'Une erreur est survenue.'));
+		}
+	}
+
+	public function load_image($filename)
+	{
+		// Validate filename to prevent directory traversal attacks
+		$filepath = BASE_APP . $filename;
+		// Check if the file exists
+		if (file_exists($filepath)) {
+			// Get the file extension and determine content type
+			$extension = pathinfo($filepath, PATHINFO_EXTENSION);
+			$contentTypes = [
+				'jpg' => 'image/jpeg',
+				'jpeg' => 'image/jpeg',
+				'png' => 'image/png',
+				'gif' => 'image/gif',
+				'bmp' => 'image/bmp',
+			];
+
+			$contentType = isset($contentTypes[$extension]) ? $contentTypes[$extension] : 'application/octet-stream';
+
+			// Set the content type header
+			header('Content-Type: ' . $contentType);
+
+			// Output the image file
+			readfile($filepath);
+
+			// Exit to prevent further output
+			exit;
+		} else {
+			// Image file not found
+			header("HTTP/1.0 404 Not Found");
+			echo "Image not found " . $filepath;
 		}
 	}
 }
@@ -613,13 +661,22 @@ switch ($action) {
 		echo $users->delete_notif();
 		break;
 	case 'num_notif':
-		echo $users->update_unread_notif();
+		if (isset($_GET['id_user'])) {
+			echo $users->update_unread_notif($_GET['id_user']);
+		}
 		break;
 	case 'stats':
 		echo $users->statistics();
 		break;
 	case 'search':
 		echo $users->search_user();
+		break;
+	case 'load_image':
+		if (isset($_GET['filename'])) {
+			echo $users->load_image($_GET['filename']);
+		} else {
+			echo $users->load_image('no-image-available.png');
+		}
 		break;
 	default:
 		// echo $sysset->index();

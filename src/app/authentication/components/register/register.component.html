@@ -24,43 +24,43 @@
                         <p>
                             NetAtlas
                         </p>
-                        <form method="post" autocomplete="off" id="registerform">
+                        <form method="post" autocomplete="off" [formGroup]="registerForm" (submit)="onSubmit()">
                             <div class="form-group">
                                 <input type="text" required="required" name="firstname" id="firstname"
-                                    autocomplete="false" />
+                                    autocomplete="false" formControlName="firstname"/>
                                 <label class="control-label" for="firstname">First Name</label><i
                                     class="mtrl-select"></i>
                             </div>
                             <div class="form-group">
                                 <input type="text" required="required" name="lastname" id="lastname"
-                                    autocomplete="false" />
+                                    autocomplete="false" formControlName="lastname" />
                                 <label class="control-label" for="lastname">Last Name</label><i class="mtrl-select"></i>
                             </div>
                             <div class="form-group">
                                 <input type="text" required="required" name="phone" id="phone"
                                     onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                    autocomplete="false" />
+                                    autocomplete="false" formControlName="phone" />
                                 <label class="control-label" for="phone">Phone</label><i class="mtrl-select"></i>
                             </div>
                             <div class="form-group">
                                 <input type="text" required="required" name="username" id="username"
-                                    autocomplete="false" />
+                                    autocomplete="false" formControlName="username" />
                                 <label class="control-label" for="username">Username</label><i class="mtrl-select"></i>
                             </div>
                             <div class="form-group">
                                 <input type="password" required="required" name="password" id="password" type="password"
-                                    autocomplete="false" />
+                                    autocomplete="false" formControlName="password" />
                                 <label class="control-label" for="password">Password</label><i class="mtrl-select"></i>
                                 <p id="errorText"></p>
                             </div>
                             <div class="form-group">
                                 <input type="password" required="required" name="confirm-password" id="confirm-password"
-                                    type="password" autocomplete="false" />
+                                    type="password" autocomplete="false" formControlName="confirm-password" />
                                 <label class="control-label" for="confirm-password">Confirm Password</label><i
                                     class="mtrl-select"></i>
                             </div>
                             <div class="form-group">
-                                <input type="text" required="required" name="email" id="email" autocomplete="false" />
+                                <input type="text" required="required" name="email" id="email" autocomplete="false" formControlName="email" />
                                 <label class="control-label" for="email"><a
                                         href="https://wpkixx.com/cdn-cgi/l/email-protection" class="__cf_email__"
                                         data-cfemail="6c29010d05002c">[email&#160;protected]</a></label><i

@@ -7,19 +7,33 @@ import { TopBarComponent } from '../layouts/top-bar/top-bar.component';
 import { FooterComponent } from '../layouts/footer/footer.component';
 import { LeftSideBarComponent } from '../layouts/left-side-bar/left-side-bar.component';
 import { RightSideBarComponent } from '../layouts/right-side-bar/right-side-bar.component';
+import { FormsModule } from '@angular/forms'
+import { HttpClientModule } from '@angular/common/http';
+import { UserService } from '../user.service';
+import { RouterModule } from '@angular/router';
+
 
 
 @NgModule({
   declarations: [
-    UserComponent,
-    TopBarComponent,
-    FooterComponent,
-    LeftSideBarComponent,
-    RightSideBarComponent
+    
   ],
   imports: [
     CommonModule,
     UserRoutingModule,
+    FormsModule,
+    RightSideBarComponent,
+    HttpClientModule,
+    UserComponent,
+    TopBarComponent,
+    FooterComponent,
+    LeftSideBarComponent,
+    RouterModule
+  ],
+  providers: [
+    UserService,
+    HttpClientModule,
+    //ToastrModule,
   ],
 })
 export class UserModule { }
