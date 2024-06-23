@@ -4,17 +4,18 @@ import { Post } from 'src/app/classes/Post';
 import { CommonModule } from '@angular/common';
 import { UserService } from 'src/app/user.service';
 import { Utils } from 'src/app/classes/Utils';
-import { DomSanitizer, SafeUrl,SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl, SafeHtml } from '@angular/platform-browser';
 import * as validator from 'validator';
 import { IUser } from 'src/app/classes/IUser';
 import { SessionService } from 'src/app/session.service';
 import { NewCommentComponent } from '../new-comment/new-comment.component';
 import { Subscription } from 'rxjs';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommentsComponent, CommonModule, NewCommentComponent],
+  imports: [CommentsComponent, CommonModule, NewCommentComponent, RouterModule],
   templateUrl: './post.component.html',
   styleUrl: './post.component.css'
 })
@@ -34,6 +35,7 @@ export class PostComponent implements OnInit, OnDestroy {
   };
 
   @Input() post!: Post;
+  @Input() hideComment!: boolean;
   comments: Post[] = [];
 
   authorAvatarUrl!: string;
@@ -42,16 +44,17 @@ export class PostComponent implements OnInit, OnDestroy {
   isMediaPostValid: boolean = false;
   safeMediaUrl: SafeUrl | undefined;
   mediaPostUrl!: string;
-  formattedPostView: string = "0";
-  formattedComment: string = "0";
+  formattedPostView: string = "";
+  formattedComment: string = "";
   isLiked: boolean = false;
   likeCount: number = 0;
-  formattedLike: string = "0";
+  formattedLike: string = "";
   decodedContent!: SafeHtml;
 
   userService: UserService = inject(UserService);
   sanitizer: DomSanitizer = inject(DomSanitizer)
   sessionService = inject(SessionService)
+  router = inject(Router);
 
   constructor() { }
 
@@ -64,11 +67,12 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
-  refreshComments(){
+  refreshComments() {
     this.getCommentsOfPost();
   }
 
   postProcessing() {
+    console.log('Rentré dans la méthode postProcessing', this.post.id_post)
     this.loadAuthorAvatar();
     this.authorUsername = Utils.displayUsername(this.post.author_username);
     this.postDate = Utils.relativeDate(this.post.post_date);
@@ -162,8 +166,8 @@ export class PostComponent implements OnInit, OnDestroy {
           } else {
             this.likeCount -= 1;
           }
+          this.formattedLike = Utils.formatLargeNumber(this.likeCount);
           //this.likeCount += this.isLiked ? 1 : -1;
-          console.log("Afficher likeCount = ", this.likeCount);
           console.log('update successful, likes = ', response.likes);
         } else {
           console.log('update failed', response.message);
@@ -174,6 +178,11 @@ export class PostComponent implements OnInit, OnDestroy {
       }
     );
 
+  }
+
+  onPostClick(event: any) {
+    console.log('Post is click');
+    this.router.navigate(['/user/post/', this.post.id_post]);
   }
 
   ngOnDestroy(): void {

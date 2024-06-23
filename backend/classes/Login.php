@@ -135,7 +135,10 @@ class Login extends DBConnection
 				'avatar' => $this->settings->userdata('avatar'),
 				'banned_temporarly' => $this->settings->userdata('banned_temporarly'),
 				'interdiction_date' => $this->settings->userdata('interdiction_date'),
-				'role' => $this->USER_ROLE
+				'role' => $this->USER_ROLE,
+				'self_intro' => $this->settings->userdata('self_intro'),
+				'address' => $this->settings->userdata('address'),
+				'phone' => $this->settings->userdata('phone'),
 			];
 
 			echo json_encode($resp);

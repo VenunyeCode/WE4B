@@ -11,6 +11,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RightSideBarComponent } from './layouts/right-side-bar/right-side-bar.component';
+import { AgChartsAngular, AgChartsAngularModule } from 'ag-charts-angular';
 
 @NgModule({
   declarations: [
@@ -23,8 +24,9 @@ import { RightSideBarComponent } from './layouts/right-side-bar/right-side-bar.c
     FormsModule,
     HttpClientModule,
     AuthenticationModule,
-    UserModule
-    
+    UserModule,
+    AgChartsAngular,
+    AgChartsAngularModule
   ],
   providers: [ToastrModule],
   bootstrap: [AppComponent]

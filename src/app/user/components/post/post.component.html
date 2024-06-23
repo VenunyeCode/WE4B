@@ -5,7 +5,8 @@
                 <img [src]="authorAvatarUrl" alt="" height="60" width="60" class="">
             </figure>
             <div class="friend-name post" data-id="">
-                <ins><a href="" title="">{{post.author_name}}</a><span class="text-danger"></span></ins>
+                <ins><a [routerLink]="['/profile',post.id_user,'page',post.id_user]" title="">{{post.author_name}}</a><span
+                        class="text-danger"></span></ins>
                 <span>{{authorUsername}}</span>
                 <span>publié {{postDate}}</span>
             </div>
@@ -16,10 +17,10 @@
                         choquant. Voir quand même en cliquant ici.</a>
                 </div> -->
 
-            <div id="originalContent" class="render">
+            <div id="originalContent" class="render" (click)="onPostClick($event)">
                 <div class="description post" data-id="">
                     <p [innerHTML]="decodedContent">
-                        
+
                     </p>
                 </div>
                 <div class="post-meta">
@@ -54,7 +55,7 @@
                             <span class="like_post" data-toggle="tooltip" title="J'aime/J'aime pas"
                                 [attr.data-like]="isLiked" [attr.data-id]="post.id_post">
                                 <i class="fa fa-heart" [ngClass]="{'text-danger': isLiked}"></i>
-                                <ins class="like-count">{{ likeCount }}</ins>
+                                <ins class="like-count">{{ formattedLike }}</ins>
                             </span>
                         </a>
                     </li>
@@ -103,9 +104,16 @@
         </div>
 
         <!-- Affichage des commentaires -->
-        <app-comments *ngFor="let comment of comments" [comment]="comment"></app-comments>
+        <ng-container *ngIf="!hideComment">
+            <div class="coment-area">
+                <ul class="we-comet">
+                    <app-comments *ngFor="let comment of comments" [comment]="comment"></app-comments>
 
-        <!-- Nouveau commentaire -->
-        <app-new-comment [idPost]="post.id_post" [idUser]="user.id_user" [avatarUrl]="authorAvatarUrl"></app-new-comment>
+                    <!-- Nouveau commentaire -->
+                    <app-new-comment [idPost]="post.id_post" [idUser]="user.id_user"
+                        [avatarUrl]="authorAvatarUrl"></app-new-comment>
+                </ul>
+            </div>
+        </ng-container>
     </div>
 </div>

@@ -148,23 +148,24 @@ class Users extends DBConnection
 	}
 
 	/* public function delete_user_forever()
-			 {
-				 extract($_POST);
-				 $qry = $this->conn->query("UPDATE user set banned_forever = 1 where id_user = $id");
-				 if ($qry) {
-					 if (is_file(BASE_APP . "uploads/avatars/$id.png"))
-						 unlink(BASE_APP . "uploads/avatars/$id.png");
-					 return json_encode(array('status' => 'success', 'message' => 'Utilisateur supprimé avec succès'));
-				 } else {
-					 return json_encode(array('status' => 'success', 'message' => 'Une erreur est survenue.'));
-				 }
-			 } */
+													{
+														extract($_POST);
+														$qry = $this->conn->query("UPDATE user set banned_forever = 1 where id_user = $id");
+														if ($qry) {
+															if (is_file(BASE_APP . "uploads/avatars/$id.png"))
+																unlink(BASE_APP . "uploads/avatars/$id.png");
+															return json_encode(array('status' => 'success', 'message' => 'Utilisateur supprimé avec succès'));
+														} else {
+															return json_encode(array('status' => 'success', 'message' => 'Une erreur est survenue.'));
+														}
+													} */
 	public function save_member()
 	{
-		if (!empty($_POST['password']))
+
+		if (!empty($_POST['password'])) {
 			$_POST['password'] = md5($_POST['password']);
-		else
-			extract($_POST);
+		}
+		extract($_POST);
 		$data = '';
 		foreach ($_POST as $k => $v) {
 			if (!in_array($k, array('id_user'))) {
@@ -215,9 +216,26 @@ class Users extends DBConnection
 
 					imagedestroy($temp);
 				}
-				return 1;
+				$resp['status'] = "success";
+				$resp['message'] = "Connexion réussie";
+
+				$resp['data'] = [
+					'id_user' => $this->settings->userdata('id_user'),
+					'username' => $this->settings->userdata('username'),
+					'email' => $this->settings->userdata('email'),
+					'firstname' => $this->settings->userdata('firstname'),
+					'lastname' => $this->settings->userdata('lastname'),
+					'avatar' => $this->settings->userdata('avatar'),
+					'banned_temporarly' => $this->settings->userdata('banned_temporarly'),
+					'interdiction_date' => $this->settings->userdata('interdiction_date'),
+					'role' => $this->settings->userdata('code_role'),
+					'self_intro' => $this->settings->userdata('self_intro'),
+					'address' => $this->settings->userdata('address'),
+					'phone' => $this->settings->userdata('phone'),
+				];
+				return json_encode($resp);
 			} else {
-				return 2;
+				return json_encode(array('status' => 'failed', 'message' => 'Eched de mis à jour'));
 			}
 
 		} else {
@@ -253,17 +271,28 @@ class Users extends DBConnection
 						unlink(BASE_APP . $fname);
 					$upload = imagepng($temp, BASE_APP . $fname);
 					if ($upload) {
-						$this->conn->query("UPDATE `user` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id_user = '{$id_user}'");
+						$this->conn->query("UPDATE `user` set `avatar` = '{$fname}' where id_user = '{$id_user}'");
 						if ($this->settings->userdata('id_user') == $id_user)
-							$this->settings->set_userdata('avatar', $fname . "?v=" . time());
+							$this->settings->set_userdata('avatar', $fname);
 					}
 
 					imagedestroy($temp);
 				}
+				$user = [];
+				$qry1 = $this->conn->query("SELECT * FROM user where id_user = {$id_user}");
+				if ($qry1->num_rows > 0) {
+					while ($row = $qry1->fetch_assoc()) {
+						$user[] = $row;
+					}
+				}
 
-				return 1;
+				$resp['status'] = "success";
+				$resp['message'] = "Connexion réussie";
+
+				$resp['data'] = $user[0];
+				return json_encode($resp);
 			} else {
-				return "UPDATE user set $data where id_user = {$id_user}";
+				return json_encode(array('status' => 'failed', 'message' => 'Echec de mis à jour'));
 			}
 
 		}
@@ -312,33 +341,42 @@ class Users extends DBConnection
 		if ($save) {
 			$resp['status'] = 'success';
 			$resp['message'] = 'Your Account has been created successfully';
-			$uid = $user->getUserId();
+			$uid = $this->conn->insert_id;
+			$user = [];
+			$qry = $this->conn->query("SELECT * FROM user where id_user = {$uid}");
+			if ($qry->num_rows > 0) {
+				while ($row = $qry->fetch_assoc()) {
+					$user[] = $row;
+				}
+			}
+
+			$resp['data'] = $user[0];
 
 			/*if (!empty($_FILES['img']['tmp_name'])) {
-										   if (!is_dir(BASE_APP . "uploads/member"))
-											   mkdir(BASE_APP . "uploads/member");
-										   $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
-										   $fname = "uploads/member/$uid.png";
-										   $accept = array('image/jpeg', 'image/png');
-										   if (!in_array($_FILES['img']['type'], $accept)) {
-											   $resp['msg'] = "Image file type is invalid";
-										   }
-										   if ($_FILES['img']['type'] == 'image/jpeg')
-											   $uploadfile = imagecreatefromjpeg($_FILES['img']['tmp_name']);
-										   elseif ($_FILES['img']['type'] == 'image/png')
-											   $uploadfile = imagecreatefrompng($_FILES['img']['tmp_name']);
-										   if (!$uploadfile) {
-											   $resp['msg'] = "Image is invalid";
-										   }
-										   $temp = imagescale($uploadfile, 200, 200);
-										   if (is_file(BASE_APP . $fname))
-											   unlink(BASE_APP . $fname);
-										   $upload = imagepng($temp, BASE_APP . $fname);
-										   if ($upload) {
-											   $this->conn->query("UPDATE `user` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$uid}'");
-										   }
-										   imagedestroy($temp);
-									   }*/
+																																								if (!is_dir(BASE_APP . "uploads/member"))
+																																									mkdir(BASE_APP . "uploads/member");
+																																								$ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+																																								$fname = "uploads/member/$uid.png";
+																																								$accept = array('image/jpeg', 'image/png');
+																																								if (!in_array($_FILES['img']['type'], $accept)) {
+																																									$resp['msg'] = "Image file type is invalid";
+																																								}
+																																								if ($_FILES['img']['type'] == 'image/jpeg')
+																																									$uploadfile = imagecreatefromjpeg($_FILES['img']['tmp_name']);
+																																								elseif ($_FILES['img']['type'] == 'image/png')
+																																									$uploadfile = imagecreatefrompng($_FILES['img']['tmp_name']);
+																																								if (!$uploadfile) {
+																																									$resp['msg'] = "Image is invalid";
+																																								}
+																																								$temp = imagescale($uploadfile, 200, 200);
+																																								if (is_file(BASE_APP . $fname))
+																																									unlink(BASE_APP . $fname);
+																																								$upload = imagepng($temp, BASE_APP . $fname);
+																																								if ($upload) {
+																																									$this->conn->query("UPDATE `user` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$uid}'");
+																																								}
+																																								imagedestroy($temp);
+																																							}*/
 		} else {
 			$resp['status'] = 'failed';
 			$resp['message'] = 'Erreur d\'inscription.';
@@ -458,21 +496,22 @@ class Users extends DBConnection
 
 	function follow()
 	{
-		extract($_POST);
-		if ($status == 1) {
-			$sql = "INSERT INTO `followship` set `id_user_following` = '{$id_user_following}', `id_user_follower` = '{$this->settings->userdata('id_user')}' ";
+		$input = json_decode(file_get_contents('php://input'), true);
+
+		if ($input['status'] == 1) {
+			$sql = "INSERT INTO `followship` set `id_user_following` = '{$input['following']}', `id_user_follower` = '{$input['follower']}' ";
 		} else {
-			$sql = "DELETE FROM `followship` where `id_user_following` = '{$id_user_following}' and `id_user_follower` = '{$this->settings->userdata('id_user')}' ";
+			$sql = "DELETE FROM `followship` where `id_user_following` = '{$input['following']}' and `id_user_follower` = '{$input['follower']}' ";
 		}
 		$process = $this->conn->query($sql);
 		if ($process) {
 			$resp['status'] = 'success';
-			$followers = $this->conn->query("SELECT id_user_follower FROM followship WHERE id_user_following = {$id_user_following} ")->num_rows;
+			$followers = $this->conn->query("SELECT id_user_follower FROM followship WHERE id_user_following = {$input['following']} ")->num_rows;
 			$resp['followers'] = $followers;
-			$resp['msg'] = 'Nouveau follower';
+			$resp['message'] = 'Nouveau follower';
 		} else {
 			$resp['status'] = 'error';
-			$resp['msg'] = 'Erreur lors du process de follow/unfollow';
+			$resp['message'] = 'Erreur lors du process de follow/unfollow';
 		}
 		return json_encode($resp);
 	}
@@ -510,11 +549,11 @@ class Users extends DBConnection
 		return json_encode($resp);
 	}
 
-	function statistics()
+	function statistics($idUser)
 	{
 		$data = array();
 		$sql = "SELECT YEAR(post_date) AS years, MONTH(post_date) AS months, COUNT(*) AS post_count
-        FROM post
+        FROM post WHERE id_post_comment IS NULL AND id_user = {$idUser}
         GROUP BY YEAR(post_date), MONTH(post_date)
         ORDER BY years, months";
 		$process = $this->conn->query($sql);
@@ -524,8 +563,10 @@ class Users extends DBConnection
 				$data[] = $row;
 			}
 		}
-
-		return json_encode($data);
+		$resp['status'] = 'success';
+		$resp['message'] = 'Successful';
+		$resp['data'] = $data;
+		return json_encode($resp);
 	}
 
 	function search_user()
@@ -666,7 +707,9 @@ switch ($action) {
 		}
 		break;
 	case 'stats':
-		echo $users->statistics();
+		if (isset($_GET['id_user'])) {
+			echo $users->statistics($_GET['id_user']);
+		}
 		break;
 	case 'search':
 		echo $users->search_user();

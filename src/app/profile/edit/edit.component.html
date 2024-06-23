@@ -1,0 +1,80 @@
+<div class="central-meta">
+    <div class="editing-info">
+        <h5 class="f-title"><i class="ti-info-alt"></i> Mise à jour d'information de
+            profil</h5>
+
+        <form action="" id="manage-user" [formGroup]="editForm" (submit)="onSubmit()">
+            <input type="hidden" name="id_user" formControlName="id_user"
+                value="">
+
+            <div class="form-group half">
+                <input type="text" name="firstname" id="firstname"
+                    required="required" formControlName="firstname"
+                    value="" />
+                <label class="control-label" for="firstname">Prénom</label><i
+                    class="mtrl-select"></i>
+            </div>
+            <div class="form-group half">
+                <input type="text" name="lastname" id="lastname" required="required"
+                    value="" formControlName="lastname"/>
+                <label class="control-label" for="lastname">Nom</label><i
+                    class="mtrl-select"></i>
+            </div>
+            <div class="form-group half">
+                <input type="email" name="email" id="email" required="required"
+                    value="" formControlName="email"/>
+                <label class="control-label" for="email">
+                    <a href="https://wpkixx.com/cdn-cgi/l/email-protection"
+                        class="__cf_email__" data-cfemail="4b0e262a22270b">Email</a>
+                </label><i class="mtrl-select"></i>
+            </div>
+            <div class="form-group half">
+                <input type="tel" id="phone" name="phone" required="required"
+                    value="" formControlName="phone"/>
+                <label class="control-label" for="phone">Numéro de
+                    téléphone</label><i class="mtrl-select"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password" id="password" formControlName="password"
+                    class="form-control" value="" autocomplete="off" />
+                <label class="control-label" for="password">Mot de passe</label><i
+                    class="mtrl-select"></i>
+                <small><i>Ne rien mettre si vous ne voulez pas changer votre mot de
+                        passe.</i></small>
+            </div>
+            <div class="form-group">
+                <input type="text" id="address" name="address" required="required"
+                    value="" formControlName="address"/>
+                <label class="control-label" for="address">Adresse</label><i
+                    class="mtrl-select"></i>
+            </div>
+            <div class="form-group">
+                <textarea rows="3" id="about" name="self_intro"
+                    required="required" formControlName="self_intro"></textarea>
+                <label class="control-label" for="about">A propos de
+                    moi</label><i class="mtrl-select"></i>
+            </div>
+            <div class="form-group">
+                <label for="" class="control-label">Avatar</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input rounded-circle"
+                        id="customFile" name="img" formControlName="img"
+                        (change)="onFileChange($event)"
+                        accept="image/png, image/jpeg">
+                    <label class="custom-file-label" for="customFile">Choisir
+                        fichier</label>
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-center">
+                <img [src]="imagePreviewUrl"
+                    alt="" id="cimg" class="img-fluid img-thumbnail">
+            </div>
+            <div class="submit-btns">
+                <button class="mtr-btn" type="submit"
+                    form="manage-user"><span>Modifier</span></button>
+            </div>
+        </form>
+
+    </div>
+</div>

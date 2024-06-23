@@ -40,7 +40,7 @@ export class RightSideBarComponent implements OnInit {
 
   userService: UserService = inject(UserService);
   authenticationService = inject(AuthenticationService);
-  sessionService = inject(SessionService)
+  sessionService = inject(SessionService);
 
   constructor() {
 
@@ -48,12 +48,12 @@ export class RightSideBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.sessionService.get("userdata");
-    this.loadImage();
+    this.loadImage(this.user.avatar);
     this.getInsight();
   }
 
-  loadImage() {
-    this.authenticationService.loadImage(this.user.avatar).subscribe(
+  loadImage(filename: string) {
+    this.authenticationService.loadImage(filename).subscribe(
       data => {
         this.imageUrl = URL.createObjectURL(data);
       },
@@ -61,6 +61,19 @@ export class RightSideBarComponent implements OnInit {
         console.error('Error loading image:', error);
       }
     );
+  }
+
+  loadInsightImage(filename: string): string {
+    let url = "";
+    this.authenticationService.loadImage(filename).subscribe(
+      data => {
+        url = URL.createObjectURL(data);
+      },
+      error => {
+        console.error('Error loading image:', error);
+      }
+    );
+    return url;
   }
 
   getInsight() {
@@ -76,6 +89,8 @@ export class RightSideBarComponent implements OnInit {
             this.weekViews = response.week_views;
             this.likeUsers = response.data_like;
             this.viewUsers = response.data_view;
+
+            this.loadUserImages();
           } else {
             console.log('Insight loading failed', response.message);
           }
@@ -84,6 +99,38 @@ export class RightSideBarComponent implements OnInit {
           console.error('API error', error);
         }
       );
+  }
+
+  loadUserImages() {
+    this.viewUsers.forEach(user => {
+      this.authenticationService.loadImage(user.author_avatar).subscribe(
+        data => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            user.author_avatar = reader.result as string;
+          };
+          reader.readAsDataURL(data);
+        },
+        error => {
+          console.error('Error loading image for user:', user.author_name, error);
+        }
+      );
+    });
+
+    this.likeUsers.forEach(user => {
+      this.authenticationService.loadImage(user.author_avatar).subscribe(
+        data => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            user.author_avatar = reader.result as string;
+          };
+          reader.readAsDataURL(data);
+        },
+        error => {
+          console.error('Error loading image for user:', user.author_name, error);
+        }
+      );
+    });
   }
 
 }

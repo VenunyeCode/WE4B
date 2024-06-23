@@ -13,7 +13,6 @@ export class Utils {
             suffix = 'b';
             number = number / 1000;
         }
-
         return Math.floor(number).toLocaleString() + suffix;
     }
 

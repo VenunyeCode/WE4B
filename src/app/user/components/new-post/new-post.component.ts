@@ -33,7 +33,7 @@ export class NewPostComponent {
 
   userService: UserService = inject(UserService);
   authenticationService = inject(AuthenticationService);
-  sessionService = inject(SessionService)
+  sessionService = inject(SessionService);
 
   constructor(private fb: FormBuilder) {
     this.user = this.sessionService.get("userdata");

@@ -4,23 +4,23 @@ import { UserComponent } from './user.component';
 import { LoginComponent } from '../authentication/components/login/login.component';
 import { NewsFeedComponent } from './components/news-feed/news-feed.component';
 import { NewPostComponent } from './components/new-post/new-post.component';
+import { PostDetailComponent } from './components/post-detail/post-detail.component';
 
 const routes: Routes = [
   {
     path: '',
     component: UserComponent,
     children: [
-      //TODO: ici tu ajoutes justes les autres routes
-      // sous la forme
-      // {
-      //   path: 'test',
-      //   component: TestComponent,
-      //   pathMatch: 'full'
-      // }
       {
         path: 'news',
         component: NewsFeedComponent,
         pathMatch: 'full'
+      },
+      {
+        path: 'post/:id',
+        component: PostDetailComponent,
+        pathMatch: 'full',
+        title: 'Post details'
       }
     ]
   }

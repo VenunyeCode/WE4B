@@ -18,8 +18,8 @@ export class LoginComponent implements OnInit {
   authForm: FormGroup;
   router = inject(Router);
   authenticationService = inject(AuthenticationService);
-  toastr = inject(ToastrService)
-  sessionService = inject(SessionService)
+  toastr = inject(ToastrService);
+  sessionService = inject(SessionService);
 
 
 
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
           if (response.status == 'success') {
             this.toastr.success('Login successful!', 'Success');
             this.sessionService.clear();
-            this.sessionService.set('userdata', response.data)
+            this.sessionService.set('userdata', response.data);
             console.log('Login successful', response.data);
             /* this.router.navigate(['/user', 'news']) */
             this.router.navigateByUrl('/user/news')

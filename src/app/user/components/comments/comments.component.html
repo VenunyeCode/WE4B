@@ -1,25 +1,21 @@
-<div class="coment-area">
-    <ul class="we-comet">
-        <li>
-            <div class="comet-avatar">
-                <img [src]="authorAvatarUrl" alt="" height="45" width="45">
-            </div>
-            <div class="we-comment">
-                <div class="coment-head">
-                    <h5><a href="" title="">
-                            {{comment.author_name}}
-                        </a></h5>
-                    <span>
-                        {{commentDate}}
-                    </span>
-                    <a class="we-reply" href="#" title="Répondre"><i class="fa fa-reply"></i></a>
-                </div>
-                <p>
-                    {{comment.content_post}}
-                    <i class="em em-smiley"></i>
-                </p>
-            </div>
-        </li>
-        
-    </ul>
-</div>
+<li>
+    <div class="comet-avatar">
+        <img [src]="authorAvatarUrl" alt="" height="45" width="45">
+    </div>
+    <div class="we-comment">
+        <div class="coment-head">
+            <h5><a [routerLink]="['/profile',comment.id_user,'page',comment.id_user]" title="">
+                    {{comment.author_name}}
+                </a></h5>
+            <span>
+                {{commentDate}}
+            </span>
+            <a class="we-reply" href="#" title="Répondre"><i class="fa fa-reply"></i></a>
+        </div>
+        <p>
+            {{comment.content_post}}
+            <i class="em em-smiley"></i>
+        </p>
+    </div>
+</li>
+<br />

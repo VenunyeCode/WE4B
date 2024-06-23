@@ -57,8 +57,6 @@ export class TopBarComponent implements OnInit {
     this.authenticationService.logout(this.user.id_user).subscribe(
       response => {
         if (response.status == 'success') {
-
-          this.sessionService.set('userdata', response.data)
           console.log('Logout successful', response.data);
           this.router.navigateByUrl('/authentication/login');
         } else {

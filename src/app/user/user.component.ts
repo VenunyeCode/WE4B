@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { IUser } from 'src/app/classes/IUser';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { SessionService } from 'src/app/session.service';
@@ -21,7 +21,7 @@ import { switchMap } from 'rxjs/operators';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit,OnDestroy {
   private refreshSubscription!: Subscription;
 
   user: IUser = {
@@ -37,6 +37,7 @@ export class UserComponent implements OnInit {
   };
 
   unreadNotif:number = 0;
+  userId:number = 0;
 
   sessionService = inject(SessionService)
   userService: UserService = inject(UserService);
@@ -45,6 +46,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.sessionService.get("userdata");
+    this.userId = this.user.id_user;
     this.getUnreadNotifications();
   }
 
@@ -55,7 +57,7 @@ export class UserComponent implements OnInit {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Notification loaded successfully');
+            console.log('Notification loaded successfully',response.unread_notif);
             this.unreadNotif = response.unread_notif;
           } else {
             console.log('Notification loading failed', response.message);

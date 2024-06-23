@@ -216,6 +216,73 @@ class Master extends DBConnection
 		return json_encode($resp);
 	}
 
+	function get_user_posts($idUser)
+	{
+		$sql = "SELECT p.*, concat(u.firstname, ' ',u.lastname) as `author_name` , u.avatar as `author_avatar`, u.username as `author_username` FROM `post` p INNER JOIN `user` u ON p.id_user = u.id_user WHERE p.id_post_comment IS NULL AND p.removed = 0 AND p.id_user = '{$idUser}' ORDER BY p.`post_date` DESC";
+		$process = $this->conn->query($sql);
+		$data = [];
+		if ($process) {
+			$resp['status'] = 'success';
+			$resp['message'] = 'Posts successfully retrieved';
+			if ($process->num_rows > 0) {
+				while ($row = $process->fetch_assoc()) {
+					$data[] = $row;
+				}
+			}
+			$resp['data'] = $data;
+		} else {
+			$resp['status'] = 'failed';
+			$resp['message'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+
+	function get_post_detail($id_post, $id_viewer)
+	{
+		$data = [];
+		if ($id_viewer != 0) {
+			$query = "SELECT p.*, concat(u.firstname, ' ',u.lastname) as `author_name` , u.avatar as `author_avatar`, u.username as `author_username` FROM `post` p INNER JOIN `user` u ON p.id_user = u.id_user WHERE p.id_post_comment IS NULL AND p.removed = 0 AND p.id_post = '{$id_post}' ORDER BY p.`post_date` DESC";
+			$queryAddView = "INSERT INTO `post_view` SET `id_post` = {$id_post}, id_user = {$id_viewer}";
+			$result = $this->conn->query($query);
+			$result1 = NULL;
+
+			if ($result->num_rows != 0) {
+				$verifyUser = $this->conn->query("SELECT id_user FROM `post_view` WHERE id_post = '{$id_post}' ")->num_rows;
+				if ($verifyUser == 0) {
+					$this->conn->query($queryAddView);
+					$newViews = $this->conn->query("SELECT id_user FROM `post_view` WHERE id_post = '{$id_post}' ")->num_rows;
+					$queryUpdateView = "UPDATE `post` SET `views`= $newViews WHERE id_post = $id_post";
+					$this->conn->query($queryUpdateView);
+					$result1 = $this->conn->query($query);
+				}
+
+				while ($row = $verifyUser == 0 ? $result1->fetch_assoc() : $result->fetch_assoc()) {
+					$data[] = $row;
+				}
+				$resp['status'] = 'success';
+				$resp['message'] = 'Post detail successfully retrieved';
+				$resp['data'] = $data;
+			} else {
+				$resp['status'] = 'failed';
+				$resp['message'] = $this->conn->error;
+			}
+		} else {
+			$query = "SELECT p.*, concat(u.firstname, ' ',u.lastname) as `author_name` , u.avatar as `author_avatar`, u.username as `author_username` FROM `post` p INNER JOIN `user` u ON p.id_user = u.id_user WHERE p.id_post_comment IS NULL AND p.removed = 0 AND p.id_post = '{$id_post}' ORDER BY p.`post_date` DESC";
+			$result = $this->conn->query($query);
+			if ($result->num_rows != 0) {
+				while ($row = $result->fetch_assoc()) {
+					$data[] = $row;
+				}
+			}
+			$resp['status'] = 'success';
+			$resp['message'] = 'Post detail successfully retrieved';
+			$resp['data'] = $data;
+		}
+
+
+		return json_encode($resp);
+	}
+
 	function get_comments_by_post($id_post)
 	{
 		$sql = "SELECT p.*, concat(u.firstname, ' ',u.lastname) as `author_name` , u.avatar as `author_avatar`, u.username as `author_username` FROM `post` p inner join `user` u on p.id_user = u.id_user WHERE p.removed = 0 and p.`id_post_comment` = {$id_post} ORDER BY p.`post_date` DESC";
@@ -300,6 +367,117 @@ class Master extends DBConnection
 
 		return json_encode($resp);
 	}
+
+	function get_user_info($idUser, $connectedUser)
+	{
+		try {
+			$ownerQuery = "SELECT * FROM `user` WHERE id_user = " . $idUser;
+			$ownerResult = $this->conn->query($ownerQuery);
+			$data = [];
+			if ($ownerResult->num_rows > 0) {
+				while ($row = $ownerResult->fetch_assoc()) {
+					$data[] = $row;
+				}
+			}
+			//Récupération des informations de follower
+			$followers = $this->conn->query("SELECT id_user_follower FROM followship WHERE id_user_following = {$idUser} ")->num_rows;
+			//Savoir si l'utilisateur connecté suis ou pas la présente page de l'utilisateur
+			$connectedFollower = $this->conn->query("SELECT id_user_follower FROM followship WHERE id_user_following = {$idUser} and id_user_follower = {$connectedUser} ")->num_rows;
+
+			$resp['status'] = 'success';
+			$resp['message'] = 'Successful';
+			$resp['followers'] = $followers;
+			$resp['is_following'] = $connectedFollower == 0 ? false : true;
+			$resp['data'] = $data[0];
+		} catch (\Throwable $th) {
+			$resp['status'] = 'failed';
+			$resp['message'] = 'Failed';
+		}
+
+		return json_encode($resp);
+	}
+
+	function get_user_notification($idUser)
+	{
+		try {
+			//Suppression des notifications vielle de plus de deux semaines
+			$this->conn->query("DELETE FROM notification WHERE notification_date < DATE_SUB(NOW(), INTERVAL 2 WEEK)");
+
+			$resultQueryNotif = $this->conn->query("SELECT n.*, COALESCE(u.id_user,'') as 'post_author', COALESCE(u.avatar,'') as 'author_avatar'
+                                    FROM notification n
+                                    LEFT JOIN post p ON n.id_post = p.id_post
+                                    LEFT JOIN user u ON p.id_user = u.id_user
+                                    WHERE n.id_user = {$idUser} AND n.removed = 0 ORDER BY n.notification_date DESC");
+			$data = [];
+			if ($resultQueryNotif->num_rows > 0) {
+				while ($row = $resultQueryNotif->fetch_assoc()) {
+					$data[] = $row;
+				}
+			}
+			$resp['status'] = 'success';
+			$resp['message'] = 'Successful';
+			$resp['data'] = $data;
+		} catch (\Throwable $th) {
+			$resp['status'] = 'failed';
+			$resp['message'] = 'Failed';
+		}
+
+		return json_encode($resp);
+	}
+
+	function get_followers_likers($idUser)
+	{
+		try {
+			//Récupération des informations de follower
+			$nbFollowings = 0;
+			$nbFollowers = 0;
+			$nbLikers = 0;
+
+			$followers = $this->conn->query("SELECT id_user_follower FROM followship WHERE id_user_following = {$idUser} ")->num_rows;
+			$queryLikers = "SELECT up.*, COALESCE(COUNT(up.id_user),0) as 'likers' FROM `post_like` pl JOIN post p ON pl.id_post = p.id_post JOIN user u ON p.id_user = u.id_user JOIN user up ON pl.id_user = up.id_user WHERE p.id_user = {$idUser} GROUP BY up.id_user ";
+			$queryFollowers = "SELECT u.*, COALESCE(COUNT(u.id_user),0) as 'followers' FROM followship f JOIN user u ON f.id_user_follower = u.id_user WHERE f.id_user_following = {$idUser} GROUP BY u.id_user ";
+			$queryFollowings = "SELECT u.* FROM followship f JOIN user u ON f.id_user_following = u.id_user WHERE f.id_user_follower = {$idUser}";
+			//$myFollowings = $conn->query("SELECT u.*, COALESCE(COUNT(u.id_user),0) as 'followings' FROM followship f JOIN user u ON f.id_user_following = u.id_user WHERE f.id_user_follower = {$_settings->userdata('id_user')}")->num_rows;
+			$resultQueryLikers = $this->conn->query($queryLikers);
+			$resultQueryFollowers = $this->conn->query($queryFollowers);
+			$resultQueryFollowings = $this->conn->query($queryFollowings);
+			$dataLikers = [];
+			$dataFollowers = [];
+			$dataFollowings = [];
+			if ($resultQueryLikers->num_rows > 0) {
+				$nbLikers = $resultQueryLikers->num_rows;
+				while ($row = $resultQueryLikers->fetch_assoc()) {
+					$dataLikers[] = $row;
+				}
+			}
+			if ($resultQueryFollowers->num_rows > 0) {
+				$nbFollowers = $resultQueryFollowers->num_rows;
+				while ($row = $resultQueryFollowers->fetch_assoc()) {
+					$dataFollowers[] = $row;
+				}
+			}
+			if ($resultQueryFollowings->num_rows > 0) {
+				$nbFollowings = $resultQueryFollowings->num_rows;
+				while ($row = $resultQueryFollowings->fetch_assoc()) {
+					$dataFollowings[] = $row;
+				}
+			}
+
+			$resp['status'] = 'success';
+			$resp['message'] = 'Successful';
+			$resp['followers'] = $nbFollowers;
+			$resp['followings'] = $nbFollowings;
+			$resp['likes'] = $nbLikers;
+			$resp['data_like'] = $dataLikers;
+			$resp['data_follower'] = $dataFollowers;
+			$resp['data_following'] = $dataFollowings;
+		} catch (\Throwable $th) {
+			$resp['status'] = 'failed';
+			$resp['message'] = 'Failed';
+		}
+
+		return json_encode($resp);
+	}
 }
 
 $Master = new Master();
@@ -334,6 +512,13 @@ switch ($action) {
 			echo json_encode(['status' => 'failed', 'message' => 'ID post manquant.']);
 		}
 		break;
+	case 'user_posts':
+		if (isset($_GET['id_user'])) {
+			echo $Master->get_user_posts($_GET['id_user']);
+		} else {
+			echo json_encode(['status' => 'failed', 'message' => 'ID user manquant.']);
+		}
+		break;
 	case 'check_like':
 		echo $Master->check_liked_post();
 		break;
@@ -342,6 +527,34 @@ switch ($action) {
 			echo $Master->get_insight($_GET['id_user']);
 		} else {
 			echo json_encode(['status' => 'failed', 'message' => 'ID user manquant.']);
+		}
+		break;
+	case 'post_detail':
+		if (isset($_GET['id_post']) && isset($_GET['id_viewer'])) {
+			echo $Master->get_post_detail($_GET['id_post'], $_GET['id_viewer']);
+		} else {
+			echo json_encode(['status' => 'failed', 'message' => 'ID post manquant.']);
+		}
+		break;
+	case 'user_info':
+		if (isset($_GET['id_user']) && isset($_GET['id_connected'])) {
+			echo $Master->get_user_info($_GET['id_user'], $_GET['id_connected']);
+		} else {
+			echo json_encode(['status' => 'failed', 'message' => 'ID USER manquant.']);
+		}
+		break;
+	case 'user_notif':
+		if (isset($_GET['id_user'])) {
+			echo $Master->get_user_notification($_GET['id_user']);
+		} else {
+			echo json_encode(['status' => 'failed', 'message' => 'ID USER manquant.']);
+		}
+		break;
+	case 'user_follows':
+		if (isset($_GET['id_user'])) {
+			echo $Master->get_followers_likers($_GET['id_user']);
+		} else {
+			echo json_encode(['status' => 'failed', 'message' => 'ID USER manquant.']);
 		}
 		break;
 	default:

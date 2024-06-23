@@ -8,4 +8,8 @@ export interface IUser {
     banned_temporarly: number;
     interdiction_date: string | null;
     role: string;
+    self_intro?:string;
+    address?:string;
+    phone?:string;
+    password?:string;
   }

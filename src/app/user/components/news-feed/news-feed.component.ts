@@ -50,7 +50,7 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
           }
         },
         error => {
-          console.error('Login error', error);
+          console.error('API error', error);
         }
       );
   }

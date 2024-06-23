@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Post } from 'src/app/classes/Post';
 import { UserService } from 'src/app/user.service';
 import { Utils } from 'src/app/classes/Utils';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-comments',
   standalone: true,
-  imports: [NewCommentComponent, CommonModule],
+  imports: [NewCommentComponent, CommonModule, RouterModule],
   templateUrl: './comments.component.html',
   styleUrl: './comments.component.css'
 })
