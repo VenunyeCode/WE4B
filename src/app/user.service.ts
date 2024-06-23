@@ -9,6 +9,7 @@ import { User } from './classes/User';
 import { IUser } from './classes/IUser';
 import { Notification } from './classes/Notification';
 import { Statistics } from './classes/Statistics';
+import { AuthResponse } from './auth-response';
 
 @Injectable({
   providedIn: 'root'
@@ -206,6 +207,15 @@ export class UserService {
       );
   }
 
+  get_users() : Observable<Array<User>> {
+    const url = this.apiUrl + '/Users.php?f=get_all';
+    return this.http.get<Array<User>>(url)
+      .pipe(
+        map(response => response),
+        catchError(this.handleError)
+      )
+  }
+
   loadImage(filename: string): Observable<Blob> {
     const url = `${this.apiUrl}/Users.php?f=load_image&filename=${filename}`;
     return this.http.get(url, { responseType: 'blob' });
@@ -214,5 +224,14 @@ export class UserService {
   private handleError(error: any): Observable<never> {
     console.error('An error occurred', error);
     return throwError(error);
+  }
+
+  warn_user(username : string) {
+    const url = `${this.apiUrl}/Users.php?f=warn_user`;
+    const headers = new HttpHeaders();
+    return this.http.post<AuthResponse>(url, username, {headers}).pipe(
+      map(response => response),
+      catchError(this.handleError)
+    );
   }
 }

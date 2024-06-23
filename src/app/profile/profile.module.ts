@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ToastrModule } from 'ngx-toastr';
 import { AgChartsAngular, AgChartsAngularModule } from 'ag-charts-angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { AgChartsAngular, AgChartsAngularModule } from 'ag-charts-angular';
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
+    FontAwesomeModule
   ],
   providers:[]
 })

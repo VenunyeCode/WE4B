@@ -24,14 +24,14 @@
                         <p>
                             NetAtlas
                         </p>
-                        <form method="post" autocomplete="off" id="loginform">
+                        <form autocomplete="off" [formGroup] = "authForm" (submit)="onSubmit()">
                             <div class="form-group">
-                                <input type="text" id="username" required="required" name="username" />
+                                <input type="text" id="username" required="required" formControlName="username" />
                                 <label class="control-label" for="username">Nom d'utilisateur ou email</label><i
                                     class="mtrl-select"></i>
                             </div>
                             <div class="form-group">
-                                <input type="password" required="required" id="password" name="password" />
+                                <input type="password" required="required" id="password" formControlName="password" />
                                 <label class="control-label" for="password">Mot de passe</label><i
                                     class="mtrl-select"></i>
                             </div>
@@ -41,9 +41,14 @@
                                     de moi.
                                 </label>
                             </div>
+                            <a href="" title="" class="forgot-pwd">Mot de
+                                passe oublié ?</a>
                             <div class="submit-btns">
-                                <button class="mtr-btn signin" type="submit"><span>Se connecter
+                                <button class="mtr-btn signin" style="margin-right: 5px;" type="submit"><span>Se
+                                        connecter
                                     </span></button>
+                                <button [routerLink]="['/authentication/register']" class="customize" type="button"
+                                    id="submit"><span><a>S'inscrire</a></span></button>
                             </div>
                         </form>
                     </div>

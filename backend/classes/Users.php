@@ -431,14 +431,19 @@ class Users extends DBConnection
 
 	public function warn_user() //here we warn user and delete warning //When the admin clickes first on warn user, if user is not warned, it will warn him but if user is already warned, it will delete warning.
 	{
-		extract($_POST);
+		$input = json_decode(file_get_contents('php://input'), true);
+		$warning_text = "Vous avez recu un avertissement dû à vos derniers posts qui ne respectent pas notre politique";
+		$username = $input["username"];
+		$query = $this->conn->prepare("SELECT id_user from user where username = '{$username}'");
+		$query->execute();
+		$user_id = $query->get_result();
 		$interdiction_query = $this->conn->prepare("INSERT into interdiction(message, actif, interdiction_date, code_interdiction_type, id_user)
-			values ('{$warning_text}', 0,  NOW(), 'AVERTIR', '{$id_user}');");
+			values ('{$warning_text}', 0,  NOW(), 'AVERTIR', '{$user_id}');");
 		$interdiction_query->execute();
 		if ($interdiction_query) {
 			$select_last_interdiction = $this->conn->insert_id;
 			$notification_query = $this->conn->prepare("INSERT INTO notification(content_notification, id_user, id_interdiction) values
-				('Vous avez reçu un avertissement pour comportement approprié', '{$id_user}', '{$select_last_interdiction}');");
+				('Vous avez reçu un avertissement pour comportement approprié', '{$user_id}', '{$select_last_interdiction}');");
 			$insert_result = $notification_query->execute();
 			if ($insert_result) {
 				return json_encode(array('status' => 'success', 'message' => 'Opération effectuéee avec succès'));
@@ -673,7 +678,7 @@ switch ($action) {
 		echo $users->save_member();
 		break;
 	case 'delete_member':
-		echo $users->delete_member();
+		echo $users->delete_users();
 		break;
 	case 'get_all':
 		echo $users->get_all();

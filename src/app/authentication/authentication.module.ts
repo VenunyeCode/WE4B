@@ -5,12 +5,13 @@ import { AuthenticationComponent } from './authentication.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AdminLoginComponent } from './components/admin-login/admin-login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionService } from '../session.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -30,7 +31,9 @@ import { SessionService } from '../session.service';
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
-    AuthenticationRoutingModule
+    AuthenticationRoutingModule,
+    ReactiveFormsModule,
+    FontAwesomeModule
   ],
   providers: [
     AuthenticationService,

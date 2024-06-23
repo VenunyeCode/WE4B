@@ -40,10 +40,17 @@ class Login extends DBConnection
 	public function login()
 	{
 
-		extract($_POST);
+		$input = json_decode(file_get_contents('php://input'), true);
+		$identity = '';
 		$stmt = $this->conn->prepare("SELECT * from user where username = ? or email = ? and password = ? and banned_forever = 0 and code_role = ? ");
-		$password = md5($password);
-		$stmt->bind_param('ssss', $username, $username, $password, $this->ADMIN_ROLE);
+		$password = md5($input['password']);
+		if(isset($input['username'])){
+			$identity = $input['username']; 
+		}
+		else {
+			$identity = $input['email'];
+		}
+		$stmt->bind_param('ssss', $identity, $identity, $password, $this->ADMIN_ROLE);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		if ($result->num_rows != 0) {
