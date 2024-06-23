@@ -5,7 +5,7 @@
                 <div class="land-featurearea">
                     <div class="land-meta">
                         <h1>
-                            NetAtlas
+                            Winku
                         </h1>
                         <p>
                             Bienvenue sur le Réseau Social Universitaire NetAtlas
@@ -23,7 +23,7 @@
                     <div class="log-reg-area sign">
                         <h2 class="log-title">Authentification</h2>
                         <p>
-                            NetAtlas
+                            Winku
                         </p>
                         <form autocomplete="off" [formGroup]="authForm" (submit)="onSubmit()">
                             <div class="form-group">
@@ -48,7 +48,7 @@
                                 <button class="mtr-btn signin" style="margin-right: 5px;" type="submit"><span>Se
                                         connecter
                                     </span></button>
-                                <button routerLink="/authentication/register" class="customize" type="button"
+                                <button [routerLink]="['/authentication/register']" class="customize" type="button"
                                     id="submit"><span><a>S'inscrire</a></span></button>
                             </div>
                         </form>

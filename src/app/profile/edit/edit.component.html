@@ -56,12 +56,12 @@
                     moi</label><i class="mtrl-select"></i>
             </div>
             <div class="form-group">
+                <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
                 <label for="" class="control-label">Avatar</label>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input rounded-circle"
                         id="customFile" name="img" formControlName="img"
-                        (change)="onFileChange($event)"
-                        accept="image/png, image/jpeg">
+                        (change)="onFileChange($event)">
                     <label class="custom-file-label" for="customFile">Choisir
                         fichier</label>
                 </div>

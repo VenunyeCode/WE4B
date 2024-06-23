@@ -22,7 +22,7 @@
                     <div class="log-reg-area sign">
                         <h2 class="log-title">S'inscrire</h2>
                         <p>
-                            NetAtlas
+                            Winku
                         </p>
                         <form method="post" autocomplete="off" [formGroup]="registerForm" (submit)="onSubmit()">
                             <div class="form-group">
@@ -55,7 +55,7 @@
                             </div>
                             <div class="form-group">
                                 <input type="password" required="required" name="confirm-password" id="confirm-password"
-                                    type="password" autocomplete="false" formControlName="confirm-password" />
+                                    type="password" autocomplete="false" formControlName="confirm" />
                                 <label class="control-label" for="confirm-password">Confirm Password</label><i
                                     class="mtrl-select"></i>
                             </div>
@@ -63,14 +63,14 @@
                                 <input type="text" required="required" name="email" id="email" autocomplete="false" formControlName="email" />
                                 <label class="control-label" for="email"><a
                                         href="https://wpkixx.com/cdn-cgi/l/email-protection" class="__cf_email__"
-                                        data-cfemail="6c29010d05002c">[email&#160;protected]</a></label><i
+                                        data-cfemail="6c29010d05002c">Email</a></label><i
                                     class="mtrl-select"></i>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="formFileSm" class="form-label">Photo</label>
                                 <input class="form-control form-control-sm" id="formFileSm" type="file" />
-                            </div>
-                            <a routerLink="/authentication/login" title="Login" class="already-have">Already have an
+                            </div> -->
+                            <a [routerLink]="['/authentication/login']" title="Login" class="already-have">Already have an
                                 account</a>
                             <div class="submit-btns">
                                 <button class="customize" type="submit" name="register"

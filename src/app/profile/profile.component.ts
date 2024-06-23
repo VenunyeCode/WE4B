@@ -75,6 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const profileId = parseInt(this.route.snapshot.params['id'], 10);
     this.user = this.sessionService.get("userdata");
+    this.user.avatar = (this.user.avatar == null || this.user.avatar.length === 0) ? 'uploads/member/no-image-available.png' : this.user.avatar;
     this.userId = this.user.id_user;
     this.getUnreadNotifications();
     this.getUserInfo(profileId);
@@ -136,6 +137,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           if (response.status == 'success') {
             console.log('User info loaded successfully');
             this.userProfile = response.data;
+            this.userProfile.avatar = (this.userProfile.avatar == null || this.userProfile.avatar.length === 0) ? 'uploads/member/no-image-available.png' : this.userProfile.avatar;
             this.followers = response.followers;
             this.isFollowing = response.is_following;
             this.authorUsername = Utils.displayUsername(this.userProfile.username);

@@ -48,6 +48,7 @@ export class RightSideBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.sessionService.get("userdata");
+    this.user.avatar = (this.user.avatar == null || this.user.avatar.length === 0) ? 'uploads/member/no-image-available.png' : this.user.avatar;
     this.loadImage(this.user.avatar);
     this.getInsight();
   }

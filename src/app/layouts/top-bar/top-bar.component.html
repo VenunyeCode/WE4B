@@ -1,13 +1,13 @@
 <div class="topbar stick">
     <div class="logo">
-        <a title="" [routerLink]="['/home']"><img src="assets/images/logo.png" alt=""></a>
+        <a title="" [routerLink]="['/user/news']"><img src="assets/images/logo.png" alt=""></a>
     </div>
 
     <div class="top-area">
 
         <div class="top-search">
             <form method="post" class="">
-                <input type="text" placeholder="Rechercher un atlasien">
+                <input type="text" placeholder="Rechercher un utilisateur ou post">
                 <button data-ripple><i class="ti-search"></i></button>
             </form>
         </div>
@@ -23,7 +23,7 @@
                     <span>{{unreadNotif}} nouveau(x) notification(s)</span>
                     <ul class="drops-menu">
                     </ul>
-                    <a [routerLink]="['/user/news']" title="" class="more-mesg">voir
+                    <a [routerLink]="['/profile',user.id_user,'notifications',user.id_user]" title="" class="more-mesg">voir
                         plus</a>
                 </div>
             </li>
@@ -44,8 +44,8 @@
             width="45">
             <span class="status f-online"></span>
             <div class="user-setting">
-                <a href="javascript:void(0)" title="Voir profil" id="profile"><i class="ti-user"></i> Voir profil</a>
-                <a href="javascript:void(0)" title="Edition profil" id="edit-profile"><i
+                <a [routerLink]="['/profile',user.id_user,'page',user.id_user]" title="Voir profil" id="profile"><i class="ti-user"></i> Voir profil</a>
+                <a [routerLink]="['/profile',user.id_user,'edit',user.id_user]" title="Edition profil" id="edit-profile"><i
                         class="ti-pencil-alt"></i>Edition profil</a>
                 <a href="javascript:void(0)" title="Déconnexion" id="logout" (click)="logout()"><i class="ti-power-off"></i>déconnexion</a>
             </div>

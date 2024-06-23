@@ -21,7 +21,7 @@ export class TopBarComponent implements OnInit {
     email: '',
     firstname: '',
     lastname: '',
-    avatar: 'no-image-available.png',
+    avatar: '',
     banned_temporarly: 0,
     interdiction_date: null,
     role: ''
@@ -33,8 +33,7 @@ export class TopBarComponent implements OnInit {
 
   constructor() {
     this.user = this.sessionService.get("userdata");
-    console.log('Avatar : ', this.sessionService.get("userdata"));
-    console.log('User : ', this.user.avatar);
+    this.user.avatar = (this.user.avatar == null || this.user.avatar.length === 0) ? 'uploads/member/no-image-available.png' : this.user.avatar;
     this.loadImage();
   }
 
@@ -57,7 +56,7 @@ export class TopBarComponent implements OnInit {
     this.authenticationService.logout(this.user.id_user).subscribe(
       response => {
         if (response.status == 'success') {
-          console.log('Logout successful', response.data);
+          console.log('Logout successful');
           this.router.navigateByUrl('/authentication/login');
         } else {
           console.log('Logout failed', response.message);

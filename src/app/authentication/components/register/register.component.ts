@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { User } from 'src/app/classes/User';
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +10,7 @@ import { SessionService } from 'src/app/session.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule,],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
         response => {
           if (response.status == 'success') {
             this.toastr.success('Registred successful!', 'Success');
-            this.sessionService.set('userdata', user);
+            this.sessionService.set('userdata', response.data);
             this.registerForm.reset();
             console.log('Registred successful', response.data);
             this.router.navigateByUrl('/user/news')
