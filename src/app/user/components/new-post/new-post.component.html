@@ -1,0 +1,49 @@
+<div class="central-meta">
+    <div class="new-postbox">
+        <figure>
+            <img [src]="imageUrl" alt="" height="60" width="60" class="">
+        </figure>
+        <div class="newpst-input">
+            <form action="" id="post-form" [formGroup]="postForm" (submit)="onSubmit()">
+                <!-- <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>"> -->
+                <textarea rows="2" placeholder="Ecrivez quelque chose" id="content" name="content" required="required"
+                    formControlName="content"></textarea>
+                <div id="image-preview">
+                    <img *ngIf="imagePreviewUrl" [src]="imagePreviewUrl" alt="Image preview"
+                        style="max-width: 100%; max-height: 200px;" />
+                </div>
+                <div class="attachments">
+                    <ul>
+                        <li>
+                            <!-- MAX_FILE_SIZE doit précéder le champ input de type file -->
+                            <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
+                            <label for="imageFile" id="image-label"></label>
+                            <i class="fa fa-image"></i>
+                            <label class="fileContainer">
+                                <input id="imageFile" name="img" type="file" (change)="onFileChange($event)" />
+                            </label>
+                        </li>
+                        <li>
+                            <i class="fa fa-video-camera"></i>
+                            <label class="fileContainer">
+                                <!-- <input name="videoFile" type="file"> -->
+                            </label>
+                        </li>
+
+                        <li>
+                            <button type="submit">Poster</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- <div>
+            <h4 class="text-danger text-center">Vous avez été banni et ne pouvez plus faire des posts ni commentaires
+                jusqu'au
+                (<span
+                    id="countdown"
+                    data-time=""></span>)
+            </h4>
+        </div> -->
+</div><!-- Post part -->

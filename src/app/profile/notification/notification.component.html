@@ -1,0 +1,39 @@
+<li>
+    <figure>
+        <ng-container *ngIf="notif.id_post!=null; else displayDefault">
+            <img [src]="senderImageUrl" alt="" height="60" width="60">
+        </ng-container>
+        <ng-template #displayDefault>
+            <img src="../../../assets/images/resources/user.webp" alt="">
+        </ng-template>
+    
+    </figure>
+    <div class="notifi-meta">
+        <div class="notify">
+            <p [ngClass]="{'unread': notif.is_notification_read==0}" [innerHTML]="decodedNotifContent">
+            </p>
+
+            <span>{{formattedNotfiDate}}</span>
+        </div>
+        <ng-container *ngIf="notif.id_post!=null && post!=null">
+            <app-post [post]="post" [hideComment]="true"></app-post>
+        </ng-container>
+        <!-- <?php $id = $row["id_notification"] ?>
+                            <?php
+                            if (isset($row['id_post'])) {
+                                $query = "SELECT * FROM `post` WHERE id_post_comment IS NULL AND removed = 0 AND id_post = " . $row['id_post'];
+                                $result = $conn->query($query);
+                                if ($result->num_rows != 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        //On utilise la classe "PostStorage pour afficher le post
+                                        $postOBJ = new PostStorage($row);
+                                        $postOBJ->display_to_html_notif();
+
+                                    }
+                                }
+                            }
+                            ?> -->
+    </div>
+    <i class="delete fa fa-close" data-id=""></i>
+
+</li>

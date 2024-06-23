@@ -1,0 +1,119 @@
+<div class="central-meta item">
+    <div class="user-post">
+        <div class="friend-info">
+            <figure>
+                <img [src]="authorAvatarUrl" alt="" height="60" width="60" class="">
+            </figure>
+            <div class="friend-name post" data-id="">
+                <ins><a [routerLink]="['/profile',post.id_user,'page',post.id_user]" title="">{{post.author_name}}</a><span
+                        class="text-danger"></span></ins>
+                <span>{{authorUsername}}</span>
+                <span>publié {{postDate}}</span>
+            </div>
+
+
+            <!-- <div class="description sensitive text-center">
+                    <a id="showPost" href="javascript:void(0)" class="btn btn-danger">Post sensible et potentiellement
+                        choquant. Voir quand même en cliquant ici.</a>
+                </div> -->
+
+            <div id="originalContent" class="render" (click)="onPostClick($event)">
+                <div class="description post" data-id="">
+                    <p [innerHTML]="decodedContent">
+
+                    </p>
+                </div>
+                <div class="post-meta">
+
+                    <ng-container *ngIf="isMediaPostValid; else imageTemplate">
+                        <iframe width="560" height="315" [src]="safeMediaUrl" allow="autoplay;"
+                            allowfullscreen></iframe>
+                    </ng-container>
+                    <ng-template #imageTemplate>
+                        <img [src]="mediaPostUrl" class="post" alt="" data-id="{{ post.id_post }}" />
+                    </ng-template>
+
+                </div>
+            </div>
+
+            <div class="we-video-info">
+                <ul>
+                    <li>
+                        <span class="views" data-toggle="tooltip" title="Vues">
+                            <i class="fa fa-eye"></i>
+                            <ins>{{formattedPostView}}</ins>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="comment post_comments" data-id="" data-toggle="tooltip" title="Commentaire">
+                            <i class="fa fa-comments-o"></i>
+                            <ins class="comment-count">{{formattedComment}}</ins>
+                        </span>
+                    </li>
+                    <li>
+                        <a (click)="toggleLike()">
+                            <span class="like_post" data-toggle="tooltip" title="J'aime/J'aime pas"
+                                [attr.data-like]="isLiked" [attr.data-id]="post.id_post">
+                                <i class="fa fa-heart" [ngClass]="{'text-danger': isLiked}"></i>
+                                <ins class="like-count">{{ formattedLike }}</ins>
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- <li>
+
+                         <a href="javascript:void(0)" class="follow" title="" data-ripple=""
+                                    data-id='<?= $this->idAuthor ?>' data-follow='false'>
+                                    <span data-toggle="tooltip" title="Suivre">
+                                        <i class="fa fa-plus-circle text-primary"></i>
+                                        <ins></ins>
+                                    </span>
+                                </a>
+
+                            
+                                <a href="javascript:void(0)" class="follow" title="" data-ripple=""
+                                    data-id='<?= $this->idAuthor ?>' data-follow='true'>
+                                    <span data-toggle="tooltip" title="Ne plus suivre">
+                                        <i class="fa fa-minus-circle text-danger"></i>
+                                        <ins></ins>
+                                    </span>
+                                </a> 
+                    </li>-->
+
+                    <li class="social-media">
+                        <div class="menu">
+                            <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
+
+                            <div class="rotater">
+                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a>
+                                </div>
+                            </div>
+                            <div class="rotater">
+                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a>
+                                </div>
+                            </div>
+                            <div class="rotater">
+                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Affichage des commentaires -->
+        <ng-container *ngIf="!hideComment">
+            <div class="coment-area">
+                <ul class="we-comet">
+                    <app-comments *ngFor="let comment of comments" [comment]="comment"></app-comments>
+
+                    <!-- Nouveau commentaire -->
+                    <app-new-comment [idPost]="post.id_post" [idUser]="user.id_user"
+                        [avatarUrl]="authorAvatarUrl"></app-new-comment>
+                </ul>
+            </div>
+        </ng-container>
+    </div>
+</div>

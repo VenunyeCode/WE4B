@@ -1,0 +1,67 @@
+<div class="theme-layout">
+    <div class="container-fluid pdng0">
+        <div class="row merged">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="land-featurearea">
+                    <div class="land-meta">
+                        <h1>
+                            Winku
+                        </h1>
+                        <p>
+                            Bienvenue sur le Réseau Social Universitaire NetAtlas
+                        </p>
+                        <div class="friend-logo">
+                            <span><a routerLink="/authentication/administration/login"><img src="assets/images/wink.png"
+                                        alt=""></a></span>
+                        </div>
+                        <a href="#" title="" class="folow-me"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="login-reg-bg">
+                    <div class="log-reg-area sign">
+                        <h2 class="log-title">Authentification</h2>
+                        <p>
+                            Winku
+                        </p>
+                        <form autocomplete="off" [formGroup]="authForm" (submit)="onSubmit()">
+                            <div class="form-group">
+                                <input type="text" id="username" required="required" formControlName="username" />
+                                <label class="control-label" for="username">Nom d'utilisateur ou email</label><i
+                                    class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" required="required" id="password" formControlName="password" />
+                                <label class="control-label" for="password">Mot de passe</label><i
+                                    class="mtrl-select"></i>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked="checked" /><i class="check-box"></i>Se souvenir
+                                    de moi.
+                                </label>
+                            </div>
+                            <a href="" title="" class="forgot-pwd">Mot de
+                                passe oublié ?</a>
+                            <div class="submit-btns">
+                                <button class="mtr-btn signin" style="margin-right: 5px;" type="submit"><span>Se
+                                        connecter
+                                    </span></button>
+                                <button [routerLink]="['/authentication/register']" class="customize" type="button"
+                                    id="submit"><span><a>S'inscrire</a></span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .customize {
+        padding: 10px 30px;
+        font-size: 14px;
+        font-family: 'Arial';
+    }
+</style>

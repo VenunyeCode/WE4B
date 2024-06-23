@@ -1,0 +1,66 @@
+<div class="topbar stick">
+    <div class="logo">
+        <a title="" [routerLink]="['/user/news']"><img src="assets/images/logo.png" alt=""></a>
+    </div>
+
+    <div class="top-area">
+
+        <div class="top-search">
+            <form method="post" class="">
+                <input type="text" placeholder="Rechercher un utilisateur ou post">
+                <button data-ripple><i class="ti-search"></i></button>
+            </form>
+        </div>
+
+        <ul class="setting-area">
+            <li><a [routerLink]="['/user/news']" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
+            <li>
+                <a href="#" title="Notification" data-ripple="">
+                    <i class="ti-bell"></i><span id="notif-span"
+                        class="badge rounded-pill bg-danger text-white">{{unreadNotif}}</span>
+                </a>
+                <div class="dropdowns">
+                    <span>{{unreadNotif}} nouveau(x) notification(s)</span>
+                    <ul class="drops-menu">
+                    </ul>
+                    <a [routerLink]="['/profile',user.id_user,'notifications',user.id_user]" title="" class="more-mesg">voir
+                        plus</a>
+                </div>
+            </li>
+
+            <!-- <li>
+                <a href="#" title="Messages" data-ripple=""><i class="ti-comment"></i><span></span></a>
+                <div class="dropdowns">
+                    <span>O nouveau Messages</span>
+                    <ul class="drops-menu">
+                        
+                    </ul>
+                    <a href="javascript:void(0)" title="" class="more-mesg">voir plus</a>
+                </div>
+            </li> -->
+        </ul>
+        <div class="user-img">
+            <img [src]="imageUrl" alt="User Image" height="80"
+            width="45">
+            <span class="status f-online"></span>
+            <div class="user-setting">
+                <a [routerLink]="['/profile',user.id_user,'page',user.id_user]" title="Voir profil" id="profile"><i class="ti-user"></i> Voir profil</a>
+                <a [routerLink]="['/profile',user.id_user,'edit',user.id_user]" title="Edition profil" id="edit-profile"><i
+                        class="ti-pencil-alt"></i>Edition profil</a>
+                <a href="javascript:void(0)" title="Déconnexion" id="logout" (click)="logout()"><i class="ti-power-off"></i>déconnexion</a>
+            </div>
+        </div>
+
+    </div>
+
+</div><!-- topbar -->
+
+
+<style>
+    img#cimg {
+        height: 30px;
+        width: 30px;
+        object-fit: cover;
+        border-radius: 100% 100%;
+    }
+</style>

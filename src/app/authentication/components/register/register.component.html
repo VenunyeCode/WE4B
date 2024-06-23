@@ -1,0 +1,109 @@
+<div class="theme-layout">
+    <div class="container-fluid pdng0">
+        <div class="row merged">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="land-featurearea">
+                    <div class="land-meta">
+                        <h1>
+                            NetAtlas
+                        </h1>
+                        <p>
+                            Welcome to NetAtlas
+                        </p>
+                        <div class="friend-logo">
+                            <span><img src="assets/images/wink.png" alt=""></span>
+                        </div>
+                        <a href="#" title="" class="folow-me">Suivez-nous</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="login-reg-bg">
+                    <div class="log-reg-area sign">
+                        <h2 class="log-title">S'inscrire</h2>
+                        <p>
+                            Winku
+                        </p>
+                        <form method="post" autocomplete="off" [formGroup]="registerForm" (submit)="onSubmit()">
+                            <div class="form-group">
+                                <input type="text" required="required" name="firstname" id="firstname"
+                                    autocomplete="false" formControlName="firstname"/>
+                                <label class="control-label" for="firstname">First Name</label><i
+                                    class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" required="required" name="lastname" id="lastname"
+                                    autocomplete="false" formControlName="lastname" />
+                                <label class="control-label" for="lastname">Last Name</label><i class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" required="required" name="phone" id="phone"
+                                    onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                    autocomplete="false" formControlName="phone" />
+                                <label class="control-label" for="phone">Phone</label><i class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" required="required" name="username" id="username"
+                                    autocomplete="false" formControlName="username" />
+                                <label class="control-label" for="username">Username</label><i class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" required="required" name="password" id="password" type="password"
+                                    autocomplete="false" formControlName="password" />
+                                <label class="control-label" for="password">Password</label><i class="mtrl-select"></i>
+                                <p id="errorText"></p>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" required="required" name="confirm-password" id="confirm-password"
+                                    type="password" autocomplete="false" formControlName="confirm" />
+                                <label class="control-label" for="confirm-password">Confirm Password</label><i
+                                    class="mtrl-select"></i>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" required="required" name="email" id="email" autocomplete="false" formControlName="email" />
+                                <label class="control-label" for="email"><a
+                                        href="https://wpkixx.com/cdn-cgi/l/email-protection" class="__cf_email__"
+                                        data-cfemail="6c29010d05002c">Email</a></label><i
+                                    class="mtrl-select"></i>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label for="formFileSm" class="form-label">Photo</label>
+                                <input class="form-control form-control-sm" id="formFileSm" type="file" />
+                            </div> -->
+                            <a [routerLink]="['/authentication/login']" title="Login" class="already-have">Already have an
+                                account</a>
+                            <div class="submit-btns">
+                                <button class="customize" type="submit" name="register"
+                                    id="register"><span>Register</span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .customize {
+        padding: 10px 30px;
+        font-size: 14px;
+        font-family: 'Arial';
+    }
+</style>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        let confirm_password = document.getElementById("confirm-password");
+        confirm_password.addEventListener("input", function () {
+            let password = document.getElementById("password").value;
+            let confirmPassword = confirm_password.value;
+            let errorText = document.getElementById("errorText");
+            if (password !== confirmPassword) {
+                errorText.style.color = "red";
+                errorText.innerHTML = "Les mots de passe ne concordent pas.";
+            } else {
+                errorText.style.color = "black";
+                errorText.innerHTML = "";
+            }
+        });
+    });
+</script>

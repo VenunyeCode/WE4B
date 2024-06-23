@@ -1,0 +1,78 @@
+<div class="central-meta">
+    <div class="frnds">
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="active" href="#following"
+                    data-toggle="tab">Following</a><span>{{nbFollowings}}</span>
+            </li>
+            <li class="nav-item"><a class="" href="#followers"
+                    data-toggle="tab">Follwers</a><span>{{nbFollowers}}</span>
+            </li>
+            <li class="nav-item"><a class="" href="#likers" data-toggle="tab">Likers</a>
+                <span>{{nbLikers}}</span>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active fade show " id="following">
+                <ul class="nearby-contct">
+                    <li *ngFor="let user of followingUsers" class="unfollowing">
+                        <div class="nearly-pepls">
+                            <figure>
+                                <a href="javascript:void(0)" title=""><img [src]="user.avatar" height="60" width="60"
+                                        alt=""></a>
+                            </figure>
+                            <div class="pepl-info">
+                                <h4><a [routerLink]="['/profile',userLog.id_user,'page',user.id_user]" title="">{{user.firstname.concat(' ').concat(user.lastname) }}</a>
+                                </h4>
+                                <span>{{user.username}}</span>
+                                <a href="javascript:void(0)" title="" class="add-butn unfollow" data-ripple=""
+                                    data-id="" (click)="unsubscribe(user.id_user)">se désabonner</a>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="lodmore"><button class="btn-view btn-load-more" (click)="getInsight()"></button></div>
+            </div>
+            <div class="tab-pane fade" id="followers">
+                <ul class="nearby-contct">
+                    <li *ngFor="let user of followerUsers">
+                        <div class="nearly-pepls">
+                            <figure>
+                                <a href="javascript:void(0)" title=""><img [src]="user.avatar" height="60" width="60"
+                                        alt="Photo de profil"></a>
+                            </figure>
+                            <div class="pepl-info">
+                                <h4><a [routerLink]="['/profile',userLog.id_user,'page',user.id_user]" title="">{{user.firstname.concat(' ').concat(user.lastname) }}</a>
+                                </h4>
+                                <span>{{user.username}}</span>
+                                <a [routerLink]="['/profile',userLog.id_user,'page',user.id_user]" title="" class="add-butn" data-ripple="">voir profil</a>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-pane fade" id="likers">
+                <ul class="nearby-contct">
+                    <li *ngFor="let user of likeUsers">
+                        <div class="nearly-pepls">
+                            <figure>
+                                <a [routerLink]="['/profile',userLog.id_user,'page',user.id_user]" title=""><img [src]="user.avatar" height="60" width="60"
+                                        alt="Photo de profil"></a>
+                            </figure>
+                            <div class="pepl-info">
+                                <h4><a href="" title="">{{user.firstname.concat(' ').concat(user.lastname) }}</a>
+                                </h4>
+                                <span>{{user.username}}</span>
+                                <a [routerLink]="['/profile',userLog.id_user,'page',user.id_user]" title="" class="add-butn" data-ripple="">Voir profil</a>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

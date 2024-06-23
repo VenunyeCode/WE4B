@@ -1,0 +1,42 @@
+<div class="widget">
+    <h4 class="widget-title">Votre page</h4>
+    <div class="your-page">
+        <figure>
+            <a href="#" title=""><img [src]="imageUrl" alt=""></a>
+        </figure>
+        <div class="page-meta">
+            <a [routerLink]="['/profile',user.id_user,'page',user.id_user]" title="" class="underline">Ma page</a>
+            <!-- <span><i class="ti-comment"></i><a href="insight.html" title="">Messages <em>9</em></a></span> -->
+            <span><i class="ti-bell"></i><a [routerLink]="['/profile',user.id_user,'notification',user.id_user]" title="">Notifications <em>{{unreadNotif}}</em></a></span>
+        </div>
+        <div class="page-likes">
+            <ul class="nav nav-tabs likes-btn">
+                <li class="nav-item"><a class="active" href="#link1" data-toggle="tab">J'aimes</a></li>
+                <li class="nav-item"><a class="" href="#link2" data-toggle="tab">vues</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active fade show " id="link1">
+                    <span><i class="ti-heart"></i>{{allLikes}}</span>
+                    <a href="javascript:void(0)" title="weekly-likes">{{weekLikes}} nouveau(x) j'aimes cette
+                        semaine</a>
+                    <div class="users-thumb-list">
+                        <a *ngFor="let user of likeUsers" href="#" title="{{ user.author_name }}" data-toggle="tooltip">
+                            <img [src]="user.author_avatar" alt=""  height="32" width="32">
+                        </a>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="link2">
+                    <span><i class="ti-eye"></i>{{allViews}}</span>
+                    <a href="javascript:void(0)" title="weekly-likes">{{weekViews}} nouvelle(s) vue(s) cette
+                        semaine</a>
+                    <div class="users-thumb-list">
+                        <a *ngFor="let user of viewUsers" href="#" title="{{ user.author_name }}" data-toggle="tooltip">
+                            <img [src]="user.author_avatar" alt="" height="32" width="32">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
