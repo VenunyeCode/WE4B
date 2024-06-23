@@ -44,11 +44,11 @@ export class PostComponent implements OnInit, OnDestroy {
   isMediaPostValid: boolean = false;
   safeMediaUrl: SafeUrl | undefined;
   mediaPostUrl!: string;
-  formattedPostView: string = "";
-  formattedComment: string = "";
+  formattedPostView: string = "0";
+  formattedComment: string = "0";
   isLiked: boolean = false;
   likeCount: number = 0;
-  formattedLike: string = "";
+  formattedLike: string = "0";
   decodedContent!: SafeHtml;
 
   userService: UserService = inject(UserService);

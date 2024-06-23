@@ -68,7 +68,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userService: UserService = inject(UserService);
   router = inject(Router);
   route: ActivatedRoute = inject(ActivatedRoute);
-  sanitizer: DomSanitizer = inject(DomSanitizer)
+  sanitizer: DomSanitizer = inject(DomSanitizer);
 
   constructor() { }
 

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FaqComponent } from './faq/faq.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'profile/:id',
     loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
+    path: 'faq',
+    component: FaqComponent,
+    pathMatch: 'full'
   }
 ];
 

@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RightSideBarComponent } from './layouts/right-side-bar/right-side-bar.component';
 import { AgChartsAngular, AgChartsAngularModule } from 'ag-charts-angular';
+import { FaqComponent } from './faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AgChartsAngular, AgChartsAngularModule } from 'ag-charts-angular';
     AuthenticationModule,
     UserModule,
     AgChartsAngular,
-    AgChartsAngularModule
+    AgChartsAngularModule,
+    FaqComponent
   ],
   providers: [ToastrModule],
   bootstrap: [AppComponent]
