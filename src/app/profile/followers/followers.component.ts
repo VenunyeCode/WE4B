@@ -50,7 +50,6 @@ export class FollowersComponent implements OnInit {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Follows loaded successfully');
             this.nbLikers = response.likes;
             this.nbFollowers = response.followers;
             this.nbFollowings = response.followings;
@@ -73,7 +72,6 @@ export class FollowersComponent implements OnInit {
       response => {
         if (response.status == 'success') {
           window.location.reload();
-          console.log('update successful, followers = ', response.followers);
         } else {
           console.log('update failed', response.message);
         }

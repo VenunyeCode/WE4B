@@ -43,7 +43,6 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Posts loaded successfully');
             this.postList = response.data;
           } else {
             console.log('Posts loading failed', response.message);

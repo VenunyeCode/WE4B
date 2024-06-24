@@ -63,14 +63,12 @@ export class EditComponent {
     }
     this.userService.updateUserInfo(updateUser, file).subscribe(
       response => {
-
-        this.toastr.success('Information mis à jour avec succès!', 'Success');
         this.sessionService.clear();
         this.sessionService.set('userdata', response.data);
         this.user = this.sessionService.get("userdata");
         //this.initForm();
         window.location.reload();
-        console.log('User saved successfully:', response);
+        this.toastr.success('Information mis à jour avec succès!', 'Success');
       },
       error => {
         this.toastr.error('Erreur lors de la mise à jour!', 'Erreur');
@@ -108,7 +106,6 @@ export class EditComponent {
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      console.log('File is not empty');
       this.editForm.patchValue({
         img: file
       });

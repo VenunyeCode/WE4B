@@ -51,7 +51,6 @@ export class RegisterComponent implements OnInit {
             this.toastr.success('Registred successful!', 'Success');
             this.sessionService.set('userdata', response.data);
             this.registerForm.reset();
-            console.log('Registred successful', response.data);
             this.router.navigateByUrl('/user/news')
           } else {
             this.toastr.error('Registred failed!', 'Error');

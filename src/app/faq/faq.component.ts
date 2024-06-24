@@ -66,7 +66,6 @@ export class FaqComponent implements OnInit, OnDestroy{
       (
         response => {
           if (response.status == 'success') {
-            console.log('Notification loaded successfully = ', response.unread_notif);
             this.unreadNotif = response.unread_notif;
           } else {
             console.log('Notification loading failed', response.message);

@@ -82,7 +82,6 @@ export class RightSideBarComponent implements OnInit {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Insight loaded successfully');
             this.unreadNotif = response.unread_notif;
             this.allLikes = response.likes;
             this.allViews = response.views;

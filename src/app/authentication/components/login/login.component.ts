@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
             this.toastr.success('Login successful!', 'Success');
             this.sessionService.clear();
             this.sessionService.set('userdata', response.data);
-            console.log('Login successful', response.data);
             /* this.router.navigate(['/user', 'news']) */
             this.router.navigateByUrl('/user/news')
           } else {

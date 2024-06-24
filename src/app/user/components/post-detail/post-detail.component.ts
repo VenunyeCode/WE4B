@@ -61,6 +61,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const postId = parseInt(this.route.snapshot.params['id'], 10);
     this.user = this.sessionService.get("userdata");
+    this.user.avatar = (this.user.avatar == null || this.user.avatar.length === 0) ? 'uploads/member/no-image-available.png' : this.user.avatar;
     this.getPostDetail(postId);
       
 
@@ -74,7 +75,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Post detail loaded successfully');
             this.post = response.data[0];
             this.postProcessing();
           } else {
@@ -114,7 +114,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       response => {
         if (response.status == 'success') {
           this.isLiked = response.liked;
-          console.log('Checking successful, liked = ', response.liked);
         } else {
 
           console.log('Checking failed', response.message);
@@ -162,7 +161,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Comment post loaded successfully');
             this.comments = response.data;
             this.formattedComment = Utils.formatLargeNumber(this.comments.length);
           } else {
@@ -186,8 +184,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
             this.likeCount -= 1;
           }
           //this.likeCount += this.isLiked ? 1 : -1;
-          console.log("Afficher likeCount = ", this.likeCount);
-          console.log('update successful, likes = ', response.likes);
         } else {
           console.log('update failed', response.message);
         }

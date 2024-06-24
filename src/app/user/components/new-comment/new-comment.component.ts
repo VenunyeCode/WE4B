@@ -38,8 +38,6 @@ export class NewCommentComponent implements OnInit {
           if (response.status == 'success') {
             this.commentForm.reset();
             this.userService.triggerRefresh();
-            console.log('Number of comments = ', response.comments);
-            console.log('Commit successful');
           } else {
             console.log('Commit saved failed', response.message);
           }

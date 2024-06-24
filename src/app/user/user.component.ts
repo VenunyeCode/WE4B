@@ -46,6 +46,7 @@ export class UserComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.user = this.sessionService.get("userdata");
+    this.user.avatar = (this.user.avatar == null || this.user.avatar.length === 0) ? 'uploads/member/no-image-available.png' : this.user.avatar;
     this.userId = this.user.id_user;
     this.getUnreadNotifications();
   }
@@ -57,7 +58,6 @@ export class UserComponent implements OnInit,OnDestroy {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Notification loaded successfully',response.unread_notif);
             this.unreadNotif = response.unread_notif;
           } else {
             console.log('Notification loading failed', response.message);

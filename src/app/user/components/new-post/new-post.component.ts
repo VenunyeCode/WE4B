@@ -65,7 +65,6 @@ export class NewPostComponent {
         this.postForm.reset();
         this.imagePreviewUrl = null;
         this.userService.triggerRefresh();
-        console.log('Post saved successfully:', response);
       },
       error => {
         console.error('Error saving post:', error);
@@ -76,7 +75,6 @@ export class NewPostComponent {
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      console.log('File is not empty');
       this.postForm.patchValue({
         img: file
       });

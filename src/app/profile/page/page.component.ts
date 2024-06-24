@@ -30,7 +30,6 @@ export class PageComponent implements OnInit {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Posts loaded successfully');
             this.userPosts = response.data;
           } else {
             console.log('Posts loading failed', response.message);

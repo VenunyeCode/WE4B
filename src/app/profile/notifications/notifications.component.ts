@@ -30,7 +30,6 @@ export class NotificationsComponent implements OnInit {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Notifications loaded successfully');
             this.notifications = response.data;
           } else {
             console.log('Notifications loading failed', response.message);

@@ -29,7 +29,6 @@ export class LeftSideBarComponent implements OnInit {
     this.authenticationService.logout(this.idUser).subscribe(
       response => {
         if (response.status == 'success') {
-          console.log('Logout successful', response.data);
           this.router.navigateByUrl('/authentication/login');
         } else {
           console.log('Logout failed', response.message);

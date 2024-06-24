@@ -42,9 +42,7 @@ export class NotificationComponent implements OnInit {
         (
           response => {
             if (response.status == 'success') {
-              console.log('Post detail loaded successfully');
               this.post = response.data[0];
-              console.log('Post detail =>',this.post);
             } else {
               console.log('Post detail loading failed', response.message);
             }

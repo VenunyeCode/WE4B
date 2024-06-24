@@ -39,6 +39,7 @@ export class PostComponent implements OnInit, OnDestroy {
   comments: Post[] = [];
 
   authorAvatarUrl!: string;
+  connectedAvatarUrl!: string;
   authorUsername!: string;
   postDate!: string;
   isMediaPostValid: boolean = false;
@@ -60,6 +61,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user = this.sessionService.get("userdata");
+    this.user.avatar = (this.user.avatar == null || this.user.avatar.length === 0) ? 'uploads/member/no-image-available.png' : this.user.avatar;
     this.postProcessing();
 
     this.refreshSubscription = this.userService.refresh$.subscribe(() => {
@@ -72,7 +74,6 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   postProcessing() {
-    console.log('Rentré dans la méthode postProcessing', this.post.id_post)
     this.loadAuthorAvatar();
     this.authorUsername = Utils.displayUsername(this.post.author_username);
     this.postDate = Utils.relativeDate(this.post.post_date);
@@ -82,6 +83,7 @@ export class PostComponent implements OnInit, OnDestroy {
     this.formattedPostView = Utils.formatLargeNumber(this.post.views);
     this.getCommentsOfPost();
     this.postLikeProcess();
+    this.loadConnectedAvatar();
   }
 
   postLikeProcess() {
@@ -95,9 +97,7 @@ export class PostComponent implements OnInit, OnDestroy {
       response => {
         if (response.status == 'success') {
           this.isLiked = response.liked;
-          console.log('Checking successful, liked = ', response.liked);
         } else {
-
           console.log('Checking failed', response.message);
         }
       },
@@ -111,6 +111,17 @@ export class PostComponent implements OnInit, OnDestroy {
     this.userService.loadImage(this.post.author_avatar).subscribe(
       data => {
         this.authorAvatarUrl = URL.createObjectURL(data);
+      },
+      error => {
+        console.error('Error loading image:', error);
+      }
+    );
+  }
+
+  loadConnectedAvatar(): void {
+    this.userService.loadImage(this.user.avatar).subscribe(
+      data => {
+        this.connectedAvatarUrl = URL.createObjectURL(data);
       },
       error => {
         console.error('Error loading image:', error);
@@ -143,7 +154,6 @@ export class PostComponent implements OnInit, OnDestroy {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Comment post loaded successfully');
             this.comments = response.data;
             this.formattedComment = Utils.formatLargeNumber(this.comments.length);
           } else {
@@ -168,7 +178,6 @@ export class PostComponent implements OnInit, OnDestroy {
           }
           this.formattedLike = Utils.formatLargeNumber(this.likeCount);
           //this.likeCount += this.isLiked ? 1 : -1;
-          console.log('update successful, likes = ', response.likes);
         } else {
           console.log('update failed', response.message);
         }

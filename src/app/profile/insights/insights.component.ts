@@ -44,7 +44,6 @@ export class InsightsComponent implements OnInit {
       (
         response => {
           if (response.status == 'success') {
-            console.log('Statistics loaded successfully');
             this.statisticData = response.data;
             this.processData();
           } else {
