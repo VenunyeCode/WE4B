@@ -148,17 +148,17 @@ class Users extends DBConnection
 	}
 
 	/* public function delete_user_forever()
-													{
-														extract($_POST);
-														$qry = $this->conn->query("UPDATE user set banned_forever = 1 where id_user = $id");
-														if ($qry) {
-															if (is_file(BASE_APP . "uploads/avatars/$id.png"))
-																unlink(BASE_APP . "uploads/avatars/$id.png");
-															return json_encode(array('status' => 'success', 'message' => 'Utilisateur supprimé avec succès'));
-														} else {
-															return json_encode(array('status' => 'success', 'message' => 'Une erreur est survenue.'));
-														}
-													} */
+															 {
+																 extract($_POST);
+																 $qry = $this->conn->query("UPDATE user set banned_forever = 1 where id_user = $id");
+																 if ($qry) {
+																	 if (is_file(BASE_APP . "uploads/avatars/$id.png"))
+																		 unlink(BASE_APP . "uploads/avatars/$id.png");
+																	 return json_encode(array('status' => 'success', 'message' => 'Utilisateur supprimé avec succès'));
+																 } else {
+																	 return json_encode(array('status' => 'success', 'message' => 'Une erreur est survenue.'));
+																 }
+															 } */
 	public function save_member()
 	{
 
@@ -353,30 +353,30 @@ class Users extends DBConnection
 			$resp['data'] = $user[0];
 
 			/*if (!empty($_FILES['img']['tmp_name'])) {
-																																								if (!is_dir(BASE_APP . "uploads/member"))
-																																									mkdir(BASE_APP . "uploads/member");
-																																								$ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
-																																								$fname = "uploads/member/$uid.png";
-																																								$accept = array('image/jpeg', 'image/png');
-																																								if (!in_array($_FILES['img']['type'], $accept)) {
-																																									$resp['msg'] = "Image file type is invalid";
-																																								}
-																																								if ($_FILES['img']['type'] == 'image/jpeg')
-																																									$uploadfile = imagecreatefromjpeg($_FILES['img']['tmp_name']);
-																																								elseif ($_FILES['img']['type'] == 'image/png')
-																																									$uploadfile = imagecreatefrompng($_FILES['img']['tmp_name']);
-																																								if (!$uploadfile) {
-																																									$resp['msg'] = "Image is invalid";
-																																								}
-																																								$temp = imagescale($uploadfile, 200, 200);
-																																								if (is_file(BASE_APP . $fname))
-																																									unlink(BASE_APP . $fname);
-																																								$upload = imagepng($temp, BASE_APP . $fname);
-																																								if ($upload) {
-																																									$this->conn->query("UPDATE `user` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$uid}'");
-																																								}
-																																								imagedestroy($temp);
-																																							}*/
+																																														   if (!is_dir(BASE_APP . "uploads/member"))
+																																															   mkdir(BASE_APP . "uploads/member");
+																																														   $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+																																														   $fname = "uploads/member/$uid.png";
+																																														   $accept = array('image/jpeg', 'image/png');
+																																														   if (!in_array($_FILES['img']['type'], $accept)) {
+																																															   $resp['msg'] = "Image file type is invalid";
+																																														   }
+																																														   if ($_FILES['img']['type'] == 'image/jpeg')
+																																															   $uploadfile = imagecreatefromjpeg($_FILES['img']['tmp_name']);
+																																														   elseif ($_FILES['img']['type'] == 'image/png')
+																																															   $uploadfile = imagecreatefrompng($_FILES['img']['tmp_name']);
+																																														   if (!$uploadfile) {
+																																															   $resp['msg'] = "Image is invalid";
+																																														   }
+																																														   $temp = imagescale($uploadfile, 200, 200);
+																																														   if (is_file(BASE_APP . $fname))
+																																															   unlink(BASE_APP . $fname);
+																																														   $upload = imagepng($temp, BASE_APP . $fname);
+																																														   if ($upload) {
+																																															   $this->conn->query("UPDATE `user` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$uid}'");
+																																														   }
+																																														   imagedestroy($temp);
+																																													   }*/
 		} else {
 			$resp['status'] = 'failed';
 			$resp['message'] = 'Erreur d\'inscription.';
@@ -436,7 +436,15 @@ class Users extends DBConnection
 		$username = $input["username"];
 		$query = $this->conn->prepare("SELECT id_user from user where username = '{$username}'");
 		$query->execute();
-		$user_id = $query->get_result();
+		$result = $query->get_result();
+
+		if ($result->num_rows > 0) {
+			$row = $result->fetch_assoc();
+			$user_id = (int) $row['id_user'];
+		} else {
+			$user_id = null;
+			return json_encode(array('status' => 'failed', 'message' => 'Une erreur s\'est produite.'));
+		}
 		$interdiction_query = $this->conn->prepare("INSERT into interdiction(message, actif, interdiction_date, code_interdiction_type, id_user)
 			values ('{$warning_text}', 0,  NOW(), 'AVERTIR', '{$user_id}');");
 		$interdiction_query->execute();
@@ -447,14 +455,12 @@ class Users extends DBConnection
 			$insert_result = $notification_query->execute();
 			if ($insert_result) {
 				return json_encode(array('status' => 'success', 'message' => 'Opération effectuéee avec succès'));
-				// $result['status'] = 'success';
-				// $result['message'] = 'Operation effectuee avec succes';
 			} else {
 				return json_encode(array('status' => 'failed', 'message' => 'Une erreur s\'est produite.'));
 			}
 
 		}
-		return $this->return_query($interdiction_query);
+		return json_encode(array('status' => 'failed', 'message' => 'Une erreur s\'est produite.'));
 	}
 
 	public function make_post_sensitive()

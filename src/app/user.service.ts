@@ -228,8 +228,8 @@ export class UserService {
 
   warn_user(username : string) {
     const url = `${this.apiUrl}/Users.php?f=warn_user`;
-    const headers = new HttpHeaders();
-    return this.http.post<AuthResponse>(url, username, {headers}).pipe(
+    const body = JSON.stringify({ username });
+    return this.http.post<AuthResponse>(url, body).pipe(
       map(response => response),
       catchError(this.handleError)
     );

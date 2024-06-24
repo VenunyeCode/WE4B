@@ -48,14 +48,14 @@ export class AdminProfileComponent implements OnInit, OnDestroy {
   }
 
   warn_user(username : string) : void {
-
+    console.log('Bouton avertir utilisateur clické',username);
     this.user.warn_user(username).subscribe(
       response => {
-        if(response.status = "failed"){
+        if(response.status == "failed"){
           this.toastr.error("Une erreur s'est produite", "Erreur");
         }
         else {
-          this.toastr.error("Utilisateur averti avec succès", "Succès");
+          this.toastr.success("Utilisateur averti avec succès", "Succès");
         }
       }
     );
